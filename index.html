@@ -3,29 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Constraints - Guida Definitiva</title>
-    
+    <title>SQL Constraints - Masterclass</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/night.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
-
     <style>
-        .glass-box {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 15px 0;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-        .accent-green { color: #a6e22e !important; }
-        .accent-blue { color: #66d9ef !important; }
-        .accent-pink { color: #f92672 !important; }
-        .accent-orange { color: #fd971f !important; }
-        .col-container { display: flex; gap: 20px; text-align: left; }
-        .col { flex: 1; }
-        .small-text { font-size: 0.6em !important; line-height: 1.2; opacity: 0.8; }
+        .glass-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; margin: 10px 0; }
+        .accent { color: #66d9ef; font-weight: bold; }
+        .highlight-line { border-left: 5px solid #a6e22e; padding-left: 15px; }
+        .source-link { font-size: 0.5em !important; color: #ae81ff !important; }
     </style>
 </head>
 <body>
@@ -33,66 +19,64 @@
         <div class="slides">
 
             <section>
-                <h3 class="accent-blue">Slide 9</h3>
-                <h2>I Vincoli (Constraints) 🛡️</h2>
+                <h1 style="font-size: 2.5em;">SQL Constraints</h1>
+                <p class="accent">Integrità e Sicurezza del Dato</p>
+                <p style="font-size: 0.6em; opacity: 0.7;">Presentazione Tecnica - Slide 9-12 + Sitografia</p>
+            </section>
+
+            <section>
+                <h3>Slide 9: Perché i Vincoli?</h3>
                 <div class="glass-box">
-                    <p>I vincoli sono le <strong>"guardie del corpo"</strong> del nostro database.</p>
-                    <ul class="small-text">
-                        <li class="fragment"><strong>Cosa fanno?</strong> Controllano i dati prima che vengano inseriti nella tabella.</li>
-                        <li class="fragment"><strong>Perché si usano?</strong> Per impedire l'inserimento di dati errati, incompleti o duplicati.</li>
-                        <li class="fragment"><strong>Il risultato:</strong> Dati sempre affidabili (Integrità del database).</li>
+                    <p>I vincoli assicurano l'<b>Integrità dei Dati</b>.</p>
+                    <ul style="font-size: 0.8em;">
+                        <li class="fragment">Evitano errori umani durante l'input.</li>
+                        <li class="fragment">Mantengono la coerenza tra diverse tabelle.</li>
+                        <li class="fragment">Rendono il database affidabile nel tempo.</li>
                     </ul>
                 </div>
             </section>
 
             <section>
-                <h3 class="accent-pink">Slide 10</h3>
-                <h2>Le Basi: Presenza e Unicità</h2>
-                <div class="col-container">
-                    <div class="col glass-box fragment">
-                        <h4 class="accent-pink">⛔ NOT NULL</h4>
-                        <p class="small-text">Obbliga a inserire un valore. Quella cella <strong>non può mai essere vuota</strong>.</p>
-                        <p class="small-text"><em>Esempio:</em> Quando ti registri a un sito, non puoi lasciare il campo "Password" vuoto.</p>
-                    </div>
-                    <div class="col glass-box fragment">
-                        <h4 class="accent-pink">❄️ UNIQUE</h4>
-                        <p class="small-text">Garantisce che <strong>non ci siano cloni</strong>. Ogni valore in quella colonna deve essere diverso dagli altri.</p>
-                        <p class="small-text"><em>Esempio:</em> Due utenti non possono avere la stessa "Email".</p>
-                    </div>
+                <h3>Slide 10: Presenza e Unicità</h3>
+                <div class="glass-box highlight-line">
+                    <p><span class="accent">NOT NULL:</span> Forza la presenza di un dato. Impedisce campi "fantasma".</p>
+                </div>
+                <div class="glass-box highlight-line fragment">
+                    <p><span class="accent">UNIQUE:</span> Ogni riga deve essere diversa. Ottimo per Email o Username.</p>
                 </div>
             </section>
 
             <section>
-                <h3 class="accent-orange">Slide 11</h3>
-                <h2>Identità e Regole</h2>
-                <div class="col-container">
-                    <div class="col glass-box fragment">
-                        <h4 class="accent-orange">🔑 PRIMARY KEY</h4>
-                        <p class="small-text">La <strong>Chiave Primaria</strong> è la targa identificativa di ogni riga. È la fusione perfetta tra NOT NULL e UNIQUE.</p>
-                        <p class="small-text"><em>Esempio:</em> Il tuo Codice Fiscale. Ce l'hai per forza (Not Null) ed è solo tuo (Unique).</p>
-                    </div>
-                    <div class="col glass-box fragment">
-                        <h4 class="accent-orange">⚖️ CHECK</h4>
-                        <p class="small-text">Un <strong>buttafuori</strong> personalizzato. Permette di inserire solo i dati che rispettano una certa condizione matematica o logica.</p>
-                        <p class="small-text"><em>Esempio:</em> <code>Età >= 18</code> (Se hai 17 anni, il database ti respinge).</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h3 class="accent-green">Slide 12</h3>
-                <h2>Tutto Insieme: Esempio Reale</h2>
+                <h3>Slide 11: Identità e Validazione</h3>
                 <div class="glass-box">
-                    <pre><code class="language-sql" data-trim data-line-numbers="1|2|3|4|5|1-6">
-CREATE TABLE Utenti (
-    ID int PRIMARY KEY,       -- 🔑 Identificativo unico assoluto
-    Nome varchar(50) NOT NULL,-- ⛔ Deve avere un nome
-    Email varchar(50) UNIQUE, -- ❄️ Nessun doppione permesso
-    Eta int CHECK (Eta >= 18) -- ⚖️ Solo maggiorenni
-);
-                    </code></pre>
+                    <p><b>PRIMARY KEY:</b> È il DNA della riga. Unisce NOT NULL e UNIQUE.</p>
+                    <hr>
+                    <p><b>CHECK:</b> Definisce una regola logica. <br><small class="accent">Esempio: Prezzo > 0 o Età >= 18.</small></p>
                 </div>
-                <p class="fragment small-text"><em>Premi <strong>ESC</strong> per la vista panoramica, usa le frecce per scorrere.</em></p>
+            </section>
+
+            <section>
+                <h3>Slide 12: Applicazione Pratica</h3>
+                <pre><code class="language-sql" data-line-numbers="2|3|4|5">
+CREATE TABLE Utenti (
+    ID int PRIMARY KEY,       -- Identificativo Unico
+    Nome varchar(50) NOT NULL,-- Obbligatorio
+    Email varchar(50) UNIQUE, -- Non duplicabile
+    Eta int CHECK (Eta >= 18) -- Regola personalizzata
+);
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Sitografia e Risorse 📚</h3>
+                <div class="glass-box" style="text-align: left;">
+                    <p style="font-size: 0.7em;">Documentazione ufficiale e approfondimenti:</p>
+                    <ul>
+                        <li><a class="source-link" href="https://www.w3schools.com/sql/sql_constraints.asp">W3Schools SQL Constraints Guide</a></li>
+                        <li><a class="source-link" href="https://dev.mysql.com/doc/refman/8.0/en/create-table-constraints.html">MySQL Official Documentation</a></li>
+                        <li><a class="source-link" href="https://sql.sh/cours/create-table">SQL.sh - Corso completo sui vincoli</a></li>
+                    </ul>
+                </div>
             </section>
 
         </div>
@@ -100,16 +84,8 @@ CREATE TABLE Utenti (
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
-    
     <script>
-        Reveal.initialize({
-            hash: true, // Salva la slide nell'URL (ottimo per condividere una slide specifica)
-            controls: true,
-            progress: true,
-            center: true,
-            transition: 'slide',
-            plugins: [ RevealHighlight ] // Attiva i colori per il codice SQL
-        });
+        Reveal.initialize({ hash: true, plugins: [ RevealHighlight ], transition: 'convex' });
     </script>
 </body>
 </html>
