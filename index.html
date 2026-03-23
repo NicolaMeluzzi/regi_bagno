@@ -3,78 +3,131 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Constraints - Masterclass</title>
+    <title>SQL DDL & Constraints - Masterclass</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/night.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+
     <style>
-        .glass-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; margin: 10px 0; }
-        .accent { color: #66d9ef; font-weight: bold; }
-        .highlight-line { border-left: 5px solid #a6e22e; padding-left: 15px; }
-        .source-link { font-size: 0.5em !important; color: #ae81ff !important; }
+        :root { --accent: #38bdf8; }
+        .glass-box { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 15px; 
+            padding: 25px; 
+            margin: 15px 0; 
+            text-align: left;
+        }
+        .accent-text { color: var(--accent); font-weight: bold; }
+        .col-container { display: flex; gap: 20px; align-items: stretch; }
+        .col { flex: 1; }
+        pre { font-size: 0.75em !important; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .source-link { font-size: 0.6em !important; color: #ae81ff !important; text-decoration: underline; }
+        .exercise-box { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent); border-radius: 10px; padding: 15px; font-size: 0.8em; }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
 
-            <section>
-                <h1 style="font-size: 2.5em;">SQL Constraints</h1>
-                <p class="accent">Integrità e Sicurezza del Dato</p>
-                <p style="font-size: 0.6em; opacity: 0.7;">Presentazione Tecnica - Slide 9-12 + Sitografia</p>
+            <section data-background-gradient="linear-gradient(to bottom, #0f172a, #334155)">
+                <h1>I comandi del DDL</h1>
+                <div style="width: 150px; height: 5px; background: var(--accent); margin: 20px auto; border-radius: 10px;"></div>
+                <p class="accent-text">Data Definition Language in SQL</p>
+                <p style="font-size: 0.6em; opacity: 0.6;">Struttura, Tipi di Dato e Vincoli di Integrità</p>
             </section>
 
             <section>
-                <h3>Slide 9: Perché i Vincoli?</h3>
+                <h3>Che cos'è il DDL?</h3>
                 <div class="glass-box">
-                    <p>I vincoli assicurano l'<b>Integrità dei Dati</b>.</p>
-                    <ul style="font-size: 0.8em;">
-                        <li class="fragment">Evitano errori umani durante l'input.</li>
-                        <li class="fragment">Mantengono la coerenza tra diverse tabelle.</li>
-                        <li class="fragment">Rendono il database affidabile nel tempo.</li>
+                    <p>Il <span class="accent-text">DDL</span> è l’insieme dei comandi SQL usati per definire la struttura del database.</p>
+                    <ul>
+                        <li><strong>CREATE</strong>: Crea nuovi database o tabelle.</li>
+                        <li><strong>ALTER</strong>: Modifica strutture esistenti.</li>
+                        <li><strong>DROP</strong>: Elimina database o tabelle.</li>
                     </ul>
                 </div>
             </section>
 
             <section>
-                <h3>Slide 10: Presenza e Unicità</h3>
-                <div class="glass-box highlight-line">
-                    <p><span class="accent">NOT NULL:</span> Forza la presenza di un dato. Impedisce campi "fantasma".</p>
+                <h3>CREATE & DROP DATABASE</h3>
+                <div class="col-container">
+                    <div class="col glass-box">
+                        <p class="accent-text">Spiegazione</p>
+                        <p style="font-size: 0.7em;"><code>CREATE</code> crea il contenitore principale. <code>DROP</code> lo elimina definitivamente insieme a tutti i dati.</p>
+                    </div>
+                    <div class="col glass-box">
+                        <p class="accent-text">Esempio</p>
+                        <pre><code class="language-sql">CREATE DATABASE Scuola;
+-- Per eliminare:
+DROP DATABASE Scuola;</code></pre>
+                    </div>
                 </div>
-                <div class="glass-box highlight-line fragment">
-                    <p><span class="accent">UNIQUE:</span> Ogni riga deve essere diversa. Ottimo per Email o Username.</p>
+            </section>
+
+            <section>
+                <h3>CREATE TABLE e Tipi di Dato</h3>
+                <div class="glass-box">
+                    <p style="font-size: 0.8em;">Permette di creare una tabella specificando campi, tipi e vincoli.</p>
+                    <pre><code class="language-sql" data-line-numbers="2|3|4|5">CREATE TABLE Studenti (
+    ID_Studente INT PRIMARY KEY,
+    Nome VARCHAR(50) NOT NULL,
+    Cognome VARCHAR(50) NOT NULL,
+    Eta INT CHECK (Eta >= 6 AND Eta <= 19)
+);</code></pre>
+                    <div class="exercise-box fragment">
+                        <strong>Esercizio:</strong> Prova a creare una tabella con almeno 3 campi e un vincolo personalizzato.
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3>Modificare ed Eliminare Tabelle</h3>
+                <div class="col-container">
+                    <div class="col glass-box">
+                        <p class="accent-text">ALTER TABLE</p>
+                        <p style="font-size: 0.7em;">Aggiunge, elimina o cambia colonne in una tabella già esistente.</p>
+                        <pre><code class="language-sql">ALTER TABLE Studenti
+ADD Email VARCHAR(100);</code></pre>
+                    </div>
+                    <div class="col glass-box">
+                        <p class="accent-text">DROP TABLE</p>
+                        <p style="font-size: 0.7em;">Elimina completamente la tabella dal database.</p>
+                        <pre><code class="language-sql">DROP TABLE Studenti;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3>Slide 10: Presenza e Unicità</h3>
+                <div class="glass-box">
+                    <p><span class="accent-text">NOT NULL:</span> Obbliga a inserire un valore. Niente campi vuoti.</p>
+                    <hr>
+                    <p><span class="accent-text">UNIQUE:</span> Assicura che ogni valore sia unico (es. Email).</p>
                 </div>
             </section>
 
             <section>
                 <h3>Slide 11: Identità e Validazione</h3>
                 <div class="glass-box">
-                    <p><b>PRIMARY KEY:</b> È il DNA della riga. Unisce NOT NULL e UNIQUE.</p>
+                    <p><b>PRIMARY KEY:</b> Identifica ogni riga in modo univoco. È la combinazione di NOT NULL e UNIQUE.</p>
                     <hr>
-                    <p><b>CHECK:</b> Definisce una regola logica. <br><small class="accent">Esempio: Prezzo > 0 o Età >= 18.</small></p>
+                    <p><b>CHECK:</b> Impone una condizione logica sui dati inseriti.</p>
+                    <p class="accent-text" style="font-size: 0.8em;">Esempio: CHECK (Eta >= 18)</p>
                 </div>
             </section>
 
             <section>
-                <h3>Slide 12: Applicazione Pratica</h3>
-                <pre><code class="language-sql" data-line-numbers="2|3|4|5">
-CREATE TABLE Utenti (
-    ID int PRIMARY KEY,       -- Identificativo Unico
-    Nome varchar(50) NOT NULL,-- Obbligatorio
-    Email varchar(50) UNIQUE, -- Non duplicabile
-    Eta int CHECK (Eta >= 18) -- Regola personalizzata
-);
-                </code></pre>
-            </section>
-
-            <section>
                 <h3>Sitografia e Risorse 📚</h3>
-                <div class="glass-box" style="text-align: left;">
-                    <p style="font-size: 0.7em;">Documentazione ufficiale e approfondimenti:</p>
-                    <ul>
-                        <li><a class="source-link" href="https://www.w3schools.com/sql/sql_constraints.asp">W3Schools SQL Constraints Guide</a></li>
-                        <li><a class="source-link" href="https://dev.mysql.com/doc/refman/8.0/en/create-table-constraints.html">MySQL Official Documentation</a></li>
-                        <li><a class="source-link" href="https://sql.sh/cours/create-table">SQL.sh - Corso completo sui vincoli</a></li>
+                <div class="glass-box">
+                    <p style="font-size: 0.7em;">Documentazione consultata per DDL e Vincoli:</p>
+                    <ul style="font-size: 0.6em;">
+                        <li><a class="source-link" target="_blank" href="https://www.w3schools.com/sql/sql_constraints.asp">W3Schools SQL Constraints Guide</a></li>
+                        <li><a class="source-link" target="_blank" href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">MySQL Documentation - CREATE TABLE</a></li>
+                        <li><a class="source-link" target="_blank" href="https://sql.sh/cours/create-table">SQL.sh - Corso DDL completo</a></li>
+                        <li><a class="source-link" target="_blank" href="https://it.wikipedia.org/wiki/Data_Definition_Language">Wikipedia - Data Definition Language</a></li>
                     </ul>
                 </div>
             </section>
@@ -85,7 +138,12 @@ CREATE TABLE Utenti (
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
     <script>
-        Reveal.initialize({ hash: true, plugins: [ RevealHighlight ], transition: 'convex' });
+        Reveal.initialize({ 
+            hash: true, 
+            plugins: [ RevealHighlight ], 
+            transition: 'convex',
+            center: true
+        });
     </script>
 </body>
 </html>
