@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Constraints Presentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/dracula.min.css">
+    <style>
+        .hljs-keyword { color: #ff79c6; font-weight: bold; }
+        .code-box { background: #282a36; padding: 20px; border-radius: 10px; border: 1px solid #44475a; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-background-gradient="linear-gradient(to bottom, #283048, #859398)">
+                <h1>Slide 9</h1>
+                <h2>Introduzione ai Vincoli</h2>
+                <p>I vincoli (Constraints) sono regole applicate alle colonne di una tabella.</p>
+                <ul>
+                    <li class="fragment">Servono a controllare l'integrità dei dati.</li>
+                    <li class="fragment">Impediscono l'inserimento di dati errati o inconsistenti.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Slide 10: NOT NULL & UNIQUE</h3>
+                <div class="code-box">
+                    <p><strong>NOT NULL:</strong> Obbliga la colonna ad avere sempre un valore. Non può essere lasciata vuota.</p>
+                    <hr>
+                    <p><strong>UNIQUE:</strong> Assicura che tutti i valori in una colonna siano distinti tra loro (niente duplicati).</p>
+                </div>
+            </section>
+
+            <section>
+                <h3>Slide 11: PRIMARY KEY & CHECK</h3>
+                <div style="display: flex; gap: 20px;">
+                    <div class="code-box" style="flex: 1;">
+                        <h4 style="color: #50fa7b;">PRIMARY KEY</h4>
+                        <p><small>Identifica univocamente ogni riga. È un mix di NOT NULL e UNIQUE.</small></p>
+                    </div>
+                    <div class="code-box" style="flex: 1;">
+                        <h4 style="color: #8be9fd;">CHECK</h4>
+                        <p><small>Verifica che il valore soddisfi una condizione specifica (es. <code>Età > 18</code>).</small></p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3>Slide 12: Esempio Completo</h3>
+                <pre class="code-box"><code style="font-family: monospace;">
+CREATE TABLE Utenti (
+    ID int <span class="hljs-keyword">PRIMARY KEY</span>,
+    Nome varchar(255) <span class="hljs-keyword">NOT NULL</span>,
+    Email varchar(255) <span class="hljs-keyword">UNIQUE</span>,
+    Eta int <span class="hljs-keyword">CHECK</span> (Eta >= 18)
+);
+                </code></pre>
+                <p><small>Premi 'S' per le note o le frecce per navigare</small></p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            transition: 'convex' // Transazione figa in 3D
+        });
+    </script>
+</body>
+</html>
