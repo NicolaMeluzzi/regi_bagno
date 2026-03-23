@@ -1,168 +1,57 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>DDL SQL - Presentazione Completa</title>
+<title>DDL SQL - Presentazione</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/night.min.css">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.reveal h1, .reveal h2 {
+  color: #38bdf8;
 }
 
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #0f172a;
-  color: white;
-}
-
-/* SLIDE */
-.slide {
-  min-height: 100vh;
-  padding: 60px 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.slide-content {
-  max-width: 1100px;
-  width: 100%;
-  text-align: center;
-}
-
-/* TITOLI */
-h1 {
-  font-size: 2.8rem;
-  margin-bottom: 20px;
-}
-
-h2 {
-  font-size: 2.2rem;
-  margin-bottom: 20px;
-  color: #e2e8f0;
-}
-
-h3 {
-  text-align: left;
-  margin-bottom: 10px;
-  color: #cbd5e1;
-}
-
-/* TESTO */
-p {
-  color: #e2e8f0;
-  margin-bottom: 12px;
-  font-size: 1.1rem;
-}
-
-.subtitle {
-  color: #94a3b8;
-  margin-bottom: 30px;
-}
-
-/* BOX */
 .box {
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 18px;
-  padding: 22px;
+  background: rgba(255,255,255,0.08);
+  padding: 20px;
+  border-radius: 15px;
   margin-top: 20px;
   text-align: left;
 }
 
-/* GRID */
-.two-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* LISTE */
-ul {
-  margin-left: 20px;
-}
-
-li {
-  margin-bottom: 8px;
-}
-
-/* CODICE */
 pre {
   background: #020617;
-  padding: 18px;
-  border-radius: 12px;
+  padding: 15px;
+  border-radius: 10px;
   border-left: 5px solid #38bdf8;
-  overflow-x: auto;
-  margin-top: 10px;
 }
 
-/* TIPI DI DATO COLORATI */
-.numeric { background: #1e3a8a; }
-.string { background: #166534; }
-.date { background: #7c2d12; }
-.boolean { background: #5b21b6; }
-
-/* EVIDENZE */
 .highlight {
   color: #38bdf8;
   font-weight: bold;
-}
-
-/* NOTE */
-.note {
-  font-size: 0.95rem;
-  color: #94a3b8;
-  margin-top: 10px;
-}
-
-/* ESERCIZI */
-.exercise {
-  margin-top: 20px;
-  padding: 14px;
-  border-radius: 12px;
-  background: rgba(56,189,248,0.15);
-  border: 1px solid rgba(56,189,248,0.4);
-}
-
-/* MOBILE */
-@media (max-width: 900px) {
-  .slide {
-    padding: 40px 20px;
-  }
-
-  .two-columns, .grid {
-    grid-template-columns: 1fr;
-  }
-
-  h1 { font-size: 2rem; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
-<section class="slide">
-<div class="slide-content">
-<h1>DDL in SQL</h1>
-<p class="subtitle">Struttura, vincoli e gestione dei database</p>
+<div class="reveal">
+<div class="slides">
 
+<!-- SLIDE 1 -->
+<section>
+<h1>DDL in SQL</h1>
+<p>Struttura e gestione dei database</p>
+</section>
+
+<!-- SLIDE 2 -->
+<section>
+<h2>Cos'è il DDL</h2>
 <div class="box">
-<p>
-Il <span class="highlight">DDL (Data Definition Language)</span> serve per creare e modificare la struttura di un database.
-</p>
+<p>Il <span class="highlight">DDL</span> permette di creare e modificare database.</p>
 <ul>
 <li>CREATE DATABASE</li>
 <li>CREATE TABLE</li>
@@ -170,80 +59,56 @@ Il <span class="highlight">DDL (Data Definition Language)</span> serve per crear
 <li>DROP TABLE</li>
 </ul>
 </div>
-</div>
 </section>
 
-<!-- DATABASE -->
-<section class="slide">
-<div class="slide-content">
-<h2>CREATE e DROP DATABASE</h2>
-
-<div class="two-columns">
-<div class="box">
-<p>Creano o eliminano un database.</p>
-</div>
-
-<div class="box">
+<!-- SLIDE 3 -->
+<section>
+<h2>CREATE DATABASE</h2>
 <pre>
 CREATE DATABASE Scuola;
+</pre>
+</section>
+
+<!-- SLIDE 4 -->
+<section>
+<h2>DROP DATABASE</h2>
+<pre>
 DROP DATABASE Scuola;
 </pre>
-</div>
-</div>
-</div>
 </section>
 
-<!-- CREATE TABLE -->
-<section class="slide">
-<div class="slide-content">
+<!-- SLIDE 5 -->
+<section>
 <h2>CREATE TABLE</h2>
-
-<div class="box">
-<p>Definisce struttura, campi e vincoli.</p>
-</div>
-
-<div class="box">
 <pre>
 CREATE TABLE Studenti (
-  ID INT PRIMARY KEY,
-  Nome VARCHAR(50) NOT NULL,
-  Eta INT CHECK (Eta >= 6)
+ ID INT PRIMARY KEY,
+ Nome VARCHAR(50) NOT NULL,
+ Eta INT CHECK (Eta >= 6)
 );
 </pre>
-</div>
-</div>
 </section>
 
-<!-- ALTER + DROP -->
-<section class="slide">
-<div class="slide-content">
-<h2>ALTER TABLE e DROP TABLE</h2>
-
-<div class="two-columns">
-<div class="box">
-<h3>ALTER TABLE</h3>
+<!-- SLIDE 6 -->
+<section>
+<h2>ALTER TABLE</h2>
 <pre>
 ALTER TABLE Studenti
 ADD Email VARCHAR(100);
 </pre>
-</div>
+</section>
 
-<div class="box">
-<h3>DROP TABLE</h3>
+<!-- SLIDE 7 -->
+<section>
+<h2>DROP TABLE</h2>
 <pre>
 DROP TABLE Studenti;
 </pre>
-</div>
-</div>
-</div>
 </section>
 
-<!-- APPROFONDIMENTO ALTER -->
-<section class="slide">
-<div class="slide-content">
+<!-- SLIDE 8 -->
+<section>
 <h2>Modifiche avanzate</h2>
-
-<div class="box">
 <pre>
 ALTER TABLE Studenti
 DROP COLUMN Email;
@@ -252,45 +117,24 @@ ALTER TABLE Studenti
 ADD CONSTRAINT chk_eta
 CHECK (Eta >= 6 AND Eta <= 19);
 </pre>
-</div>
+</section>
 
-<div class="exercise">
-Esercizio: aggiungere e rimuovere un campo.
-</div>
+<!-- SLIDE 9 -->
+<section>
+<h2>Tipi di dato</h2>
+<div class="box">
+<ul>
+<li>INT, DECIMAL → numeri</li>
+<li>VARCHAR → testo</li>
+<li>DATE → date</li>
+<li>BOOLEAN → vero/falso</li>
+</ul>
 </div>
 </section>
 
-<!-- TIPI DI DATO -->
-<section class="slide">
-<div class="slide-content">
-
-<h2>Tipi di dato in SQL</h2>
-<p class="subtitle">Definiscono che valori può contenere una colonna</p>
-
-<div class="grid">
-
-<div class="box numeric">
-<h3>Numerici</h3>
-<p>INT, DECIMAL, FLOAT</p>
-</div>
-
-<div class="box string">
-<h3>Testo</h3>
-<p>VARCHAR, CHAR, TEXT</p>
-</div>
-
-<div class="box date">
-<h3>Date</h3>
-<p>DATE, TIME, DATETIME</p>
-</div>
-
-<div class="box boolean">
-<h3>Booleani</h3>
-<p>TRUE / FALSE</p>
-</div>
-
-</div>
-
+<!-- SLIDE 10 -->
+<section>
+<h2>Esempio tipi</h2>
 <pre>
 CREATE TABLE Prodotti (
  ID INT PRIMARY KEY,
@@ -300,31 +144,24 @@ CREATE TABLE Prodotti (
  Disponibile BOOLEAN
 );
 </pre>
-
-</div>
 </section>
 
-<!-- VINCOLI -->
-<section class="slide">
-<div class="slide-content">
+<!-- SLIDE 11 -->
+<section>
 <h2>Vincoli SQL</h2>
-
 <div class="box">
 <ul>
-<li><span class="highlight">NOT NULL</span> → campo obbligatorio</li>
-<li><span class="highlight">UNIQUE</span> → valori unici</li>
-<li><span class="highlight">PRIMARY KEY</span> → identificatore</li>
-<li><span class="highlight">CHECK</span> → regola logica</li>
+<li>NOT NULL</li>
+<li>UNIQUE</li>
+<li>PRIMARY KEY</li>
+<li>CHECK</li>
 </ul>
-</div>
 </div>
 </section>
 
-<!-- ESEMPIO VINCOLI -->
-<section class="slide">
-<div class="slide-content">
-<h2>Esempio completo</h2>
-
+<!-- SLIDE 12 -->
+<section>
+<h2>Esempio vincoli</h2>
 <pre>
 CREATE TABLE Utenti (
  ID INT PRIMARY KEY,
@@ -333,18 +170,11 @@ CREATE TABLE Utenti (
  Eta INT CHECK (Eta >= 18)
 );
 </pre>
-
-<div class="exercise">
-Esercizio: creare una tabella con almeno 3 vincoli.
-</div>
-</div>
 </section>
 
-<!-- SITOGRAFIA -->
-<section class="slide">
-<div class="slide-content">
+<!-- SLIDE 13 -->
+<section>
 <h2>Sitografia</h2>
-
 <div class="box">
 <ul>
 <li>https://www.w3schools.com/sql/</li>
@@ -352,16 +182,24 @@ Esercizio: creare una tabella con almeno 3 vincoli.
 <li>https://dev.mysql.com/doc/</li>
 <li>https://www.postgresql.org/docs/</li>
 <li>https://sql.sh/</li>
-<li>Materiale didattico e appunti</li>
+<li>Appunti personali</li>
 </ul>
 </div>
-
-<p class="note">
-Fonti utilizzate per la realizzazione completa della presentazione.
-</p>
+</section>
 
 </div>
-</section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+
+<script>
+Reveal.initialize({
+  hash: true,
+  transition: 'slide',
+  controls: true,
+  progress: true
+});
+</script>
 
 </body>
 </html>
