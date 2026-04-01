@@ -1,293 +1,746 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL DDL - Masterclass Database</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/night.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>FantamotoGP - Lega dei Campioni</title>
     <style>
-        :root { --accent: #38bdf8; --success: #a6e22e; --warning: #f92672; --bg-card: rgba(30, 41, 59, 0.7); }
-        .reveal { background: #020617; }
-        .glass-card { 
-            background: var(--bg-card); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 20px; 
-            padding: 35px; 
-            text-align: left;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
         }
-        h1, h2, h3 { color: var(--accent) !important; text-transform: none !important; font-weight: 800 !important; }
-        .highlight { color: var(--accent); font-weight: bold; }
-        .exercise-box { border: 2px dashed var(--success); padding: 25px; border-radius: 15px; margin-top: 20px; }
-        pre { font-size: 0.6em !important; border-radius: 12px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; }
-        .slide-num { position: absolute; bottom: -50px; right: 0; font-size: 0.4em; color: var(--accent); opacity: 0.6; }
-        .theory-text { font-size: 0.8em !important; line-height: 1.5; color: #e2e8f0; }
-        ul li { margin-bottom: 15px; font-size: 0.75em; }
-        
-        .sito-item { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .sito-url { color: var(--accent); font-family: monospace; font-size: 0.85em; display: block; }
-        .sito-desc { font-size: 0.65em; color: #94a3b8; display: block; margin-top: 5px; }
+
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            min-height: 100vh;
+            color: #eef2ff;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Container principale */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header con effetto vetro */
+        .hero {
+            background: rgba(15, 25, 45, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            padding: 1.8rem 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFE6A7, #FFB347, #FF6A3D);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            display: inline-block;
+        }
+
+        .hero-sub {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .punteggio-tot {
+            background: #1e2a3e;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-left: 4px solid #f5b042;
+        }
+
+        .reset-btn {
+            background: rgba(220, 38, 38, 0.8);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .reset-btn:hover {
+            background: #dc2626;
+            transform: scale(0.97);
+            box-shadow: 0 0 12px rgba(220,38,38,0.4);
+        }
+
+        /* Griglia selezione piloti */
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            margin: 1.8rem 0 1.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #f5a623;
+            padding-left: 18px;
+        }
+
+        .piloti-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-pilota {
+            background: rgba(20, 30, 48, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .card-pilota:hover {
+            transform: translateY(-5px);
+            background: #1e2a3f;
+            border-color: #f5b04270;
+        }
+
+        .card-pilota.selezionato {
+            background: linear-gradient(135deg, #1f3a4b, #122b3a);
+            border-left: 6px solid #f5b042;
+            border-right: 1px solid #f5b04260;
+            box-shadow: 0 10px 25px -5px rgba(245,176,66,0.3);
+        }
+
+        .img-placeholder {
+            width: 60px;
+            height: 60px;
+            background: #2a3b4e;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcd7e;
+            box-shadow: 0 4px 10px black;
+        }
+
+        .info-pilota {
+            flex: 1;
+        }
+
+        .nome-pilota {
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .moto-team {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin: 4px 0;
+        }
+
+        .punti-base {
+            font-size: 0.85rem;
+            background: #00000055;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+        }
+
+        .badge-cap {
+            background: #f5a623;
+            color: #0a0f1e;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        /* ROSA attuale */
+        .rosa-section {
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 2rem;
+            padding: 1.2rem 1.8rem;
+            margin: 2rem 0;
+            border: 1px solid #2d3e5a;
+        }
+
+        .rosa-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        .rosa-item {
+            background: #111b26;
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .elimina-rosa {
+            background: none;
+            border: none;
+            color: #ff8a6f;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 6px;
+        }
+
+        /* Pulsanti gara */
+        .race-panel {
+            background: #0f1825cc;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-race {
+            background: #3b2a1f;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ffde9c;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .btn-race.primary {
+            background: #d97706;
+            color: #0a0f1e;
+            box-shadow: 0 5px 12px rgba(217,119,6,0.4);
+        }
+
+        .btn-race.primary:hover {
+            background: #f59e0b;
+            transform: scale(1.02);
+        }
+
+        .btn-race.secondary {
+            background: #2c3e4e;
+        }
+
+        /* Classifica lega */
+        .classifica {
+            background: #07111e80;
+            border-radius: 1.8rem;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #2a3a4e;
+        }
+
+        th {
+            color: #f5b042;
+            font-weight: 600;
+        }
+
+        .posizione {
+            font-weight: bold;
+            width: 60px;
+        }
+
+        /* alert personalizzato */
+        .toast-msg {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1e293b;
+            backdrop-filter: blur(12px);
+            padding: 12px 24px;
+            border-radius: 40px;
+            border-left: 6px solid #f5b042;
+            z-index: 1000;
+            animation: fadeInUp 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 1rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .card-pilota {
+                padding: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="reveal">
-        <div class="slides">
-
-            <section data-background-gradient="radial-gradient(#1e293b, #020617)">
-                <h1 style="font-size: 3em;">I comandi del DDL</h1>
-                <div style="width: 150px; height: 5px; background: var(--accent); margin: 20px auto; border-radius: 10px;"></div>
-                <p style="letter-spacing: 3px; font-weight: 300;">SQL DATA DEFINITION LANGUAGE</p>
-                <p style="font-size: 0.55em; color: #cbd5e1; margin-top: 50px; line-height: 1.6;">
-                    Nicola Meluzzi • Fabio Passanti<br>
-                    Alma Billi • Alessandro Venturi
-                </p>
-            </section>
-
-            <section>
-                <section>
-                    <h3>Slide 2: Sintassi Base CREATE</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">Il comando <span class="highlight">CREATE TABLE</span> definisce la struttura di una nuova relazione (tabella) nel database, specificando il nome e le caratteristiche fisiche dei dati.</p>
-                        <pre><code class="language-sql">-- Sintassi Formale
-CREATE TABLE nome_tabella (
-    colonna_1 tipo_dato,
-    colonna_2 tipo_dato,
-    ...
-);</code></pre>
-                    </div>
-                    <div class="slide-num">Slide 2</div>
-                </section>
-                <section>
-                    <h3>Slide 3: Definizione delle Colonne</h3>
-                    <div class="glass-card">
-                        <ul class="theory-text">
-                            <li>Ogni colonna rappresenta un <b>attributo</b> specifico dell'entità.</li>
-                            <li>Il <b>dominio</b> (tipo di dato) limita i valori inseribili per coerenza.</li>
-                            <li>Sintassi: Nome Colonna + Spazio + Tipo + Virgola finale.</li>
-                        </ul>
-                        <pre><code class="language-sql">CREATE TABLE Anagrafica (
-    codice_id INT,
-    nominativo VARCHAR(100)
-);</code></pre>
-                    </div>
-                    <div class="slide-num">Slide 3</div>
-                </section>
-                <section>
-                    <h3>Slide 4: Esempio e Esercizio</h3>
-                    <div class="glass-card">
-                        <pre><code class="language-sql">CREATE TABLE Studenti (
-    id_studente INT,
-    nome VARCHAR(50),
-    media_voti FLOAT
-);</code></pre>
-                        <div class="exercise-box">
-                            <p class="theory-text" style="color: var(--success); font-weight: bold;">ESERCIZIO:</p>
-                            <p class="theory-text">Crea una tabella <b>Corsi</b> con almeno 3 campi (es. ID, NomeCorso, Durata in ore).</p>
-                        </div>
-                    </div>
-                    <div class="slide-num">Slide 4</div>
-                </section>
-            </section>
-
-            <section>
-                <section>
-                    <h3>Slide 5: Tipi Numerici</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">L'efficienza dello storage dipende dalla scelta del numero:</p>
-                        <ul class="theory-text">
-                            <li><span class="highlight">INT:</span> Interi a 32-bit (range ±2 miliardi).</li>
-                            <li><span class="highlight">DECIMAL(p,s):</span> Precisione fissa per valuta e finanza.</li>
-                            <li><span class="highlight">FLOAT / DOUBLE:</span> Precisione variabile per calcoli scientifici.</li>
-                        </ul>
-                    </div>
-                    <div class="slide-num">Slide 5</div>
-                </section>
-                <section>
-                    <h3>Slide 6: Stringhe e Testi</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">Gestione dei dati alfanumerici:</p>
-                        <ul class="theory-text">
-                            <li><span class="highlight">VARCHAR(n):</span> Lunghezza variabile (occupa solo ciò che scrivi).</li>
-                            <li><span class="highlight">CHAR(n):</span> Lunghezza fissa (ideale per codici di stato).</li>
-                            <li><span class="highlight">TEXT:</span> Memorizzazione di blocchi di testo massivi.</li>
-                        </ul>
-                    </div>
-                    <div class="slide-num">Slide 6</div>
-                </section>
-                <section>
-                    <h3>Slide 7: Date e Booleani</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">Dati temporali e flag logici:</p>
-                        <ul class="theory-text">
-                            <li><span class="highlight">DATE:</span> Gestisce solo Anno, Mese e Giorno.</li>
-                            <li><span class="highlight">TIMESTAMP:</span> Registra istanti precisi con data e ora.</li>
-                            <li><span class="highlight">BOOLEAN:</span> Supporta solo 1 (TRUE) o 0 (FALSE).</li>
-                        </ul>
-                    </div>
-                    <div class="slide-num">Slide 7</div>
-                </section>
-                <section>
-                    <h3>Slide 8: Esempio e Esercizio</h3>
-                    <pre><code class="language-sql">CREATE TABLE Prodotti (
-    id INT,
-    nome VARCHAR(50),
-    prezzo DECIMAL(10,2),
-    scadenza DATE,
-    disponibile BOOLEAN
-);</code></pre>
-                    <div class="exercise-box">
-                        <p class="theory-text" style="color: var(--success); font-weight: bold;">ESERCIZIO:</p>
-                        <p class="theory-text">Quali tipi di dato useresti per un'applicazione Meteo (Temp, Città, Pioggia)?</p>
-                    </div>
-                    <div class="slide-num">Slide 8</div>
-                </section>
-            </section>
-
-            <section>
-                <section>
-                    <h3>Slide 9: Vincoli di Integrità</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">I vincoli assicurano che i dati rispettino le regole di business prima di essere salvati permanentemente.</p>
-                        <ul class="theory-text">
-                            <li>Garantiscono l'accuratezza dei dati nel tempo.</li>
-                            <li>Evitano la ridondanza o l'incoerenza logica.</li>
-                        </ul>
-                    </div>
-                    <div class="slide-num">Slide 9</div>
-                </section>
-                <section>
-                    <h3>Slide 10: PK, NOT NULL, UNIQUE</h3>
-                    <div class="glass-card theory-text">
-                        <p><span class="highlight">PRIMARY KEY:</span> L'ancora della tabella. Unica e mai nulla.</p>
-                        <p><span class="highlight">NOT NULL:</span> Obbliga la compilazione del campo (es. Cognome).</p>
-                        <p><span class="highlight">UNIQUE:</span> Impedisce valori uguali (es. Codice Fiscale).</p>
-                    </div>
-                    <div class="slide-num">Slide 10</div>
-                </section>
-                <section>
-                    <h3>Slide 11: Il vincolo CHECK</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">Il <span class="highlight">CHECK</span> permette di definire una condizione personalizzata di validità.</p>
-                        <pre><code class="language-sql">-- Controllo età minima
-eta INT CHECK (eta >= 18)
-
--- Controllo range voti
-voto INT CHECK (voto >= 1 AND voto <= 10)</code></pre>
-                    </div>
-                    <div class="slide-num">Slide 11</div>
-                </section>
-                <section>
-                    <h3>Slide 12: Esempio e Esercizio</h3>
-                    <pre><code class="language-sql">CREATE TABLE Clienti (
-    id INT PRIMARY KEY,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    eta INT CHECK (eta >= 18)
-);</code></pre>
-                    <div class="exercise-box">
-                        <p class="theory-text" style="color: var(--success); font-weight: bold;">ESERCIZIO:</p>
-                        <p class="theory-text">Crea una tabella <b>Film</b> dove la durata deve essere superiore a 1 minuto.</p>
-                    </div>
-                    <div class="slide-num">Slide 12</div>
-                </section>
-            </section>
-
-            <section>
-                <section>
-                    <h3>Slide 13: ALTER TABLE - Evoluzione</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">Permette di modificare tabelle esistenti senza doverle distruggere e ricostruire.</p>
-                        <pre><code class="language-sql">-- Nuova colonna
-ALTER TABLE Studenti ADD telefono VARCHAR(20);
-
--- Cambio tipo dato
-ALTER TABLE Studenti ALTER COLUMN nome TYPE VARCHAR(150);</code></pre>
-                    </div>
-                    <div class="slide-num">Slide 13</div>
-                </section>
-                <section>
-                    <h3>Slide 14: DROP COLUMN e Constraint</h3>
-                    <div class="glass-card">
-                        <p class="theory-text">Raffinamento della struttura in fase di manutenzione:</p>
-                        <pre><code class="language-sql">-- Rimuovere colonna obsoleta
-ALTER TABLE Studenti DROP COLUMN media_voti;
-
--- Aggiungere vincolo post-creazione
-ALTER TABLE Studenti ADD UNIQUE (email);</code></pre>
-                    </div>
-                    <div class="slide-num">Slide 14</div>
-                </section>
-                <section>
-                    <h3>Slide 15: DROP TABLE - Distruzione</h3>
-                    <div class="glass-card">
-                        <p class="theory-text" style="color: var(--warning);">OPERAZIONE CRITICA: Non esiste "Cestino".</p>
-                        <p class="theory-text">Il comando <span class="highlight">DROP TABLE</span> cancella lo schema e tutti i dati in esso contenuti istantaneamente.</p>
-                        <pre><code class="language-sql">DROP TABLE Studenti; -- Tabella eliminata</code></pre>
-                    </div>
-                    <div class="slide-num">Slide 15</div>
-                </section>
-                <section>
-                    <h3>Slide 16: Esercizio Finale</h3>
-                    <div class="glass-card">
-                        <div class="exercise-box">
-                            <p class="theory-text" style="color: var(--success); font-weight: bold;">ESERCIZIO DI GRUPPO:</p>
-                            <p class="theory-text">1. Aggiungi la colonna "Indirizzo" alla tabella Corsi.<br>2. Elimina definitivamente la tabella Corsi.</p>
-                        </div>
-                    </div>
-                    <div class="slide-num">Slide 16</div>
-                </section>
-            </section>
-
-            <section>
-                <section>
-                    <h2>Sitografia e Fonti</h2>
-                    <div class="glass-card">
-                        <div class="sito-item">
-                            <a class="sito-url">https://www.w3schools.com/sql/</a>
-                            <span class="sito-desc">Standard mondiale per la sintassi DDL. Consultato per la conformità ISO dei comandi CREATE e ALTER.</span>
-                        </div>
-                        <div class="sito-item">
-                            <a class="sito-url">https://dev.mysql.com/doc/refman/8.0/en/</a>
-                            <span class="sito-desc">Manuale ufficiale MySQL. Utilizzato per l'approfondimento sui limiti fisici dei tipi di dato e storage engine.</span>
-                        </div>
-                        <div class="sito-item">
-                            <a class="sito-url">https://sql.sh/</a>
-                            <span class="sito-desc">Portale specializzato in SQL avanzato. Fondamentale per le best practices sui vincoli di integrità.</span>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <h2>Approfondimenti Tecnici</h2>
-                    <div class="glass-card">
-                        <div class="sito-item">
-                            <a class="sito-url">https://www.postgresql.org/docs/</a>
-                            <span class="sito-desc">Documentazione PostgreSQL: utilizzata per studiare i vincoli complessi e le differenze tra dialetti SQL.</span>
-                        </div>
-                        <div class="sito-item">
-                            <a class="sito-url">https://www.geeksforgeeks.org/sql-ddl-commands/</a>
-                            <span class="sito-desc">Analisi accademica sulla gerarchia dei comandi DDL rispetto alla manipolazione dei metadati.</span>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.4em; opacity: 0.5; margin-top: 20px;">Grazie per l'attenzione!</p>
-                </section>
-            </section>
-
+<div class="app-container">
+    <div class="hero">
+        <h1>🏁 FANTOMOTOGP 🏍️</h1>
+        <div class="hero-sub">
+            <div>🏆 Lega Privata • Costruisci la tua squadra da sogno</div>
+            <div class="punteggio-tot" id="punteggioTotaleDisplay">Punti Totali: 0</div>
+            <button class="reset-btn" id="resetTotaleBtn">🔄 Reset Lega</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
-    <script>
-        Reveal.initialize({
-            hash: true,
-            center: true,
-            transition: 'convex',
-            plugins: [ RevealHighlight ],
-            controlsLayout: 'edges'
+    <!-- Sezione Selezione Piloti -->
+    <div class="section-title">
+        <span>⚡ Piloti disponibili</span>
+        <span style="font-size: 0.8rem;">(max 3 piloti | 1 capitano x2 punti)</span>
+    </div>
+    <div id="pilotiContainer" class="piloti-grid"></div>
+
+    <!-- Rosa Selezionata -->
+    <div class="rosa-section">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>🏍️ La tua squadra (max 3 piloti)</h3>
+            <span id="limiteMsg" style="color:#f5a042; font-size:0.8rem;"></span>
+        </div>
+        <div id="rosaLista" class="rosa-list">
+            <div style="opacity: 0.6;">Nessun pilota selezionato. Clicca sulle card per ingaggiare.</div>
+        </div>
+        <div style="margin-top: 12px; font-size: 0.75rem;">⭐ Il <strong>Capitano</strong> raddoppia i punti gara!</div>
+    </div>
+
+    <!-- GESTIONE GARA -->
+    <div class="race-panel">
+        <button class="btn-race secondary" id="simulaGaraBtn">🏁 SIMULA GP 🏁</button>
+        <button class="btn-race primary" id="azzeraGaraBtn">🔄 Azzera giornata (azzera punteggi tappa)</button>
+    </div>
+
+    <!-- Classifica Giocatori (singolo utente fittizio + storico) ma per demo mostriamo classifica generale di squadra -->
+    <div class="section-title">
+        <span>📊 CLASSIFICA LEGA (PUNTI TOTALI)</span>
+    </div>
+    <div class="classifica">
+        <table id="classificaTabella">
+            <thead>
+                <tr><th>Pos</th><th>Team Manager</th><th>Punti Totali</th><th>Composizione</th></tr>
+            </thead>
+            <tbody id="classificaBody">
+                <tr><td>1</td><td>🏁 IL COMMISSARIO</td><td id="puntiUser">0</td><td id="compUser">-</td></tr>
+                <tr><td>2</td><td>🤖 IA Racing</td><td id="puntiIA">0</td><td id="compIA">-</td></tr>
+                <tr><td>3</td><td>🔥 Team Leggendario</td><td id="puntiLegend">0</td><td id="compLegend">-</td></tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 12px; font-size: 12px; text-align:center;">※ Avversari simulati per rendere la sfida più avvincente</div>
+    </div>
+    <footer>FantamotoGP • Seleziona 3 piloti (1 capitano) • Ogni gara assegna punti casuali 1-25 in base alla performance reale simulata. Il capitano raddoppia! Puoi cambiare formazione in qualsiasi momento prima della simulazione.</footer>
+</div>
+
+<script>
+    // ---------- DATABASE PILOTI MOTO GP 2025 (fittizio ma realistico) ----------
+    const pilotiData = [
+        { id: 1, nome: "F. Bagnaia", team: "Ducati Lenovo", valoreBase: 22, naz: "🇮🇹", icona: "🏍️" },
+        { id: 2, nome: "J. Martin", team: "Prima Pramac", valoreBase: 21, naz: "🇪🇸", icona: "⚡" },
+        { id: 3, nome: "M. Marquez", team: "Gresini Ducati", valoreBase: 23, naz: "🇪🇸", icona: "🐯" },
+        { id: 4, nome: "E. Bastianini", team: "Ducati Lenovo", valoreBase: 20, naz: "🇮🇹", icona: "🐍" },
+        { id: 5, nome: "B. Binder", team: "Red Bull KTM", valoreBase: 18, naz: "🇿🇦", icona: "🔥" },
+        { id: 6, nome: "A. Marquez", team: "Gresini", valoreBase: 16, naz: "🇪🇸", icona: "🌟" },
+        { id: 7, nome: "F. Quartararo", team: "Monster Yamaha", valoreBase: 17, naz: "🇫🇷", icona: "🐺" },
+        { id: 8, nome: "M. Viñales", team: "Aprilia Racing", valoreBase: 17, naz: "🇪🇸", icona: "💨" },
+        { id: 9, nome: "P. Acosta", team: "Tech3 KTM", valoreBase: 19, naz: "🇪🇸", icona: "🚀" },
+        { id: 10, nome: "A. Rins", team: "Monster Yamaha", valoreBase: 15, naz: "🇪🇸", icona: "🏁" }
+    ];
+
+    // Modello dati utente (il nostro team)
+    let userTeam = []; // array di oggetti { id, nome, team, isCapitano, puntiGaraCorrente? , puntiTotaliStorici vengono gestiti separatamente }
+    let userPuntiTotali = 0;      // punti accumulati storici (dopo ogni gara)
+    let currentRacePoints = {};    // punti ottenuti nell'ultimo gp da ogni pilota (per visual temporanea)
+    
+    // Avversari fissi: IA Racing e Team Leggendario con rose predefinite e punteggi totali
+    let avversari = [
+        { nome: "🤖 IA Racing", puntiTotali: 124, squadra: [2, 5, 9], capId: 2 },   // Martin, Binder, Acosta capitano Martin
+        { nome: "🔥 Team Leggendario", puntiTotali: 118, squadra: [3, 7, 10], capId: 3 }  // Marquez, Quartararo, Rins cap Marquez
+    ];
+
+    // Helper per ottenere pilota da id
+    function getPilotaById(id) {
+        return pilotiData.find(p => p.id === id);
+    }
+
+    // Funzione per aggiornare UI della rosa
+    function renderRosa() {
+        const container = document.getElementById('rosaLista');
+        const limiteMsg = document.getElementById('limiteMsg');
+        if (!container) return;
+
+        if (userTeam.length === 0) {
+            container.innerHTML = '<div style="opacity: 0.6;">Nessun pilota selezionato. Clicca sulle card per ingaggiare.</div>';
+            limiteMsg.innerText = '';
+            return;
+        }
+
+        let html = '';
+        userTeam.forEach((pil, idx) => {
+            const pilotaInfo = getPilotaById(pil.id);
+            const nomeShow = pilotaInfo ? pilotaInfo.nome : pil.nome;
+            const capBadge = pil.isCapitano ? '⭐ CAPITANO' : '';
+            html += `
+                <div class="rosa-item">
+                    <span>${pilotaInfo?.icona || '🏍️'} ${nomeShow}</span>
+                    ${capBadge ? `<span style="background:#f5a623; color:black; padding:0 8px; border-radius:20px; font-size:0.7rem;">${capBadge}</span>` : ''}
+                    <button class="elimina-rosa" data-id="${pil.id}">🗑️</button>
+                </div>
+            `;
         });
-    </script>
+        container.innerHTML = html;
+        if (userTeam.length >= 3) {
+            limiteMsg.innerText = "Rosa completa (3/3). Rimuovi un pilota per cambiarlo.";
+        } else {
+            limiteMsg.innerText = `Puoi aggiungere ancora ${3 - userTeam.length} pilota/i.`;
+        }
+
+        // Eventi rimozione
+        document.querySelectorAll('.elimina-rosa').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                rimuoviPilotaDaRosa(id);
+                e.stopPropagation();
+            });
+        });
+        aggiornaPunteggioTotaleDisplay();
+        aggiornaClassificaCompleta();
+    }
+
+    function rimuoviPilotaDaRosa(id) {
+        const index = userTeam.findIndex(p => p.id === id);
+        if (index !== -1) {
+            userTeam.splice(index, 1);
+            // dopo rimozione se c'era un capitano e rimane vuoto? nessun problema
+            // se non ci sono più piloti il capitano viene rimosso
+            if (userTeam.length > 0 && !userTeam.some(p => p.isCapitano)) {
+                // assegna automaticamente il primo come capitano
+                userTeam[0].isCapitano = true;
+                showToast(`📢 ${getPilotaById(userTeam[0].id).nome} è il nuovo capitano!`);
+            }
+            renderListaPiloti(); // refresh selezione
+            renderRosa();
+            salvaSuLocalStorage();
+        }
+    }
+
+    // render griglia piloti (con stato selezionato)
+    function renderListaPiloti() {
+        const container = document.getElementById('pilotiContainer');
+        if (!container) return;
+        const userTeamIds = userTeam.map(p => p.id);
+        let html = '';
+        pilotiData.forEach(pilota => {
+            const isSelected = userTeamIds.includes(pilota.id);
+            const isFull = userTeam.length >= 3 && !isSelected;
+            let classeCard = 'card-pilota';
+            if (isSelected) classeCard += ' selezionato';
+            let disabledAttr = isFull ? ' style="opacity:0.6; cursor:not-allowed;"' : '';
+            html += `
+                <div class="${classeCard}" data-id="${pilota.id}" ${disabledAttr}>
+                    <div class="img-placeholder">${pilota.icona}</div>
+                    <div class="info-pilota">
+                        <div class="nome-pilota">${pilota.naz} ${pilota.nome}</div>
+                        <div class="moto-team">${pilota.team}</div>
+                        <div class="punti-base">valore potenziale: ${pilota.valoreBase} pts</div>
+                    </div>
+                    ${isSelected ? '<span style="font-size:1.5rem;">✅</span>' : (userTeam.length >=3 ? '🔒' : '➕')}
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        // eventi click
+        document.querySelectorAll('.card-pilota').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const id = parseInt(card.getAttribute('data-id'));
+                const isFullTeam = userTeam.length >= 3;
+                const alreadySelected = userTeam.some(p => p.id === id);
+                if (alreadySelected) {
+                    showToast(`⚠️ ${getPilotaById(id).nome} è già nella tua squadra!`);
+                    return;
+                }
+                if (isFullTeam) {
+                    showToast("Limite massimo 3 piloti! Rimuovine uno prima di aggiungere.");
+                    return;
+                }
+                // aggiungi pilota, di default non capitano se non è il primo
+                const nuovoPilota = { id: id, isCapitano: false };
+                userTeam.push(nuovoPilota);
+                if (userTeam.length === 1) {
+                    userTeam[0].isCapitano = true;
+                    showToast(`✨ ${getPilotaById(id).nome} è il tuo capitano! (raddoppia punti gara)`);
+                } else {
+                    showToast(`➕ ${getPilotaById(id).nome} aggiunto alla squadra.`);
+                }
+                renderListaPiloti();
+                renderRosa();
+                salvaSuLocalStorage();
+            });
+        });
+    }
+
+    // Funzione per cambiare capitano (dalla rosa, si può aggiungere interazione secondaria)
+    // Aggiungiamo doppio click sulla rosa per cambiare capitano? più elegante: bottone nella rosa? 
+    // Miglioriamo: su ogni elemento rosa, aggiungiamo azione per nominare capitano.
+    // Modifichiamo renderRosa per includere anche un'icona capitano editabile
+    function renderRosaWithCap() {
+        const container = document.getElementById('rosaLista');
+        if (!container) return;
+        if (userTeam.length === 0) {
+            container.innerHTML = '<div style="opacity: 0.6;">Nessun pilota selezionato. Clicca sulle card per ingaggiare.</div>';
+            document.getElementById('limiteMsg').innerText = '';
+            return;
+        }
+        let html = '';
+        userTeam.forEach((pil, idx) => {
+            const pilotaInfo = getPilotaById(pil.id);
+            const nomeShow = pilotaInfo ? pilotaInfo.nome : pil.nome;
+            const isCap = pil.isCapitano;
+            html += `
+                <div class="rosa-item" style="justify-content:space-between;">
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span>${pilotaInfo?.icona || '🏍️'} ${nomeShow}</span>
+                        ${isCap ? '<span class="badge-cap">⭐ CAPITANO</span>' : '<button class="btn-nomina-cap" data-id="'+pil.id+'" style="background:#2d4a6e; border:none; border-radius:30px; padding:2px 12px; color:white; cursor:pointer; font-size:0.7rem;">Nomina Cap</button>'}
+                    </div>
+                    <button class="elimina-rosa" data-id="${pil.id}" style="background:none; border:none; color:#ffaa77; font-size:1.2rem; cursor:pointer;">🗑️</button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.elimina-rosa').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                rimuoviPilotaDaRosa(id);
+                e.stopPropagation();
+            });
+        });
+        document.querySelectorAll('.btn-nomina-cap').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                userTeam.forEach(p => p.isCapitano = false);
+                const target = userTeam.find(p => p.id === id);
+                if (target) target.isCapitano = true;
+                renderRosaWithCap();
+                renderListaPiloti();
+                showToast(`👑 Cambio capitano: ora ${getPilotaById(id).nome} guida la squadra!`);
+                salvaSuLocalStorage();
+                e.stopPropagation();
+            });
+        });
+        if (userTeam.length >= 3) document.getElementById('limiteMsg').innerText = "Rosa completa (3/3). Rimuovi un pilota per cambiarlo.";
+        else document.getElementById('limiteMsg').innerText = `Puoi aggiungere ancora ${3 - userTeam.length} pilota/i.`;
+        aggiornaPunteggioTotaleDisplay();
+        aggiornaClassificaCompleta();
+    }
+
+    // override
+    const originalRender = renderRosa;
+    window.renderRosa = renderRosaWithCap;
+    renderRosa = renderRosaWithCap;
+
+    // Simulazione Gara: assegna punteggi casuali 1-25 per ogni pilota (in base a potenziale)
+    function simulaGara() {
+        if (userTeam.length === 0) {
+            showToast("❌ Non hai selezionato nessun pilota! Ingaggia almeno 1 pilota prima di simulare il GP.");
+            return;
+        }
+        // Punteggi per i piloti dell'utente
+        let puntiGaraUser = {};
+        let puntiTotaliTappaUser = 0;
+        userTeam.forEach(pil => {
+            const pilotaInfo = getPilotaById(pil.id);
+            let baseRandom = Math.floor(Math.random() * 22) + 4; // range 4-25
+            // influenza del valoreBase per rendere realistico
+            let mod = Math.floor(pilotaInfo.valoreBase / 5);
+            let puntiFinali = Math.min(30, Math.max(1, baseRandom + mod - 2));
+            puntiFinali = Math.floor(puntiFinali);
+            if (pil.isCapitano) {
+                puntiGaraUser[pil.id] = puntiFinali * 2;
+                puntiTotaliTappaUser += puntiFinali * 2;
+            } else {
+                puntiGaraUser[pil.id] = puntiFinali;
+                puntiTotaliTappaUser += puntiFinali;
+            }
+        });
+        
+        // Aggiorna punti totali utente
+        userPuntiTotali += puntiTotaliTappaUser;
+        
+        // Simula punteggi per avversari in base alle loro rose
+        for (let av of avversari) {
+            let puntiTappaAv = 0;
+            av.squadra.forEach(idPilota => {
+                let pilotaBase = getPilotaById(idPilota);
+                let rnd = Math.floor(Math.random() * 22) + 4;
+                let pts = Math.min(28, rnd + Math.floor(pilotaBase.valoreBase / 6));
+                if (av.capId === idPilota) pts *= 2;
+                puntiTappaAv += pts;
+            });
+            av.puntiTotali += puntiTappaAv;
+        }
+        
+        // Salva ultimi punti per messaggio
+        currentRacePoints = puntiGaraUser;
+        let dettaglioMsg = `🏁 GP CORSA concluso! 🏁\nHai totalizzato ${puntiTotaliTappaUser} punti in questa gara.\n`;
+        for(let pid in puntiGaraUser) {
+            let pilNome = getPilotaById(parseInt(pid)).nome;
+            dettaglioMsg += `- ${pilNome}: ${puntiGaraUser[pid]} punti ${userTeam.find(p=>p.id==parseInt(pid))?.isCapitano ? '(capitano x2)' : ''}\n`;
+        }
+        showToast(dettaglioMsg, 5000);
+        aggiornaPunteggioTotaleDisplay();
+        aggiornaClassificaCompleta();
+        salvaSuLocalStorage();
+        renderListaPiloti(); 
+        renderRosa();
+    }
+
+    function azzeraGara() {
+        // Resetta solo i punti dell'ultima gara simulata? meglio chiedere: vogliamo resettare punti totali? No, azzera giornata -> rimette i punteggi come prima dell'ultima simulazione?
+        // ma per esperienza utente: azzera punteggi totali all'ultimo salvataggio? implementiamo azzera ultima gara (rollback) no: "azzera giornata" resetta i punti totali di tutti a 0? 
+        // la richiesta: "azzera giornata (azzera punteggi tappa)" -> rimette i punteggi totali a zero (azzera classifica). Attenzione: per demo lo facciamo ma con conferma.
+        if(confirm("⚠️ Attenzione: Azzererai TUTTI i punteggi totali di tutti i team (inclusi avversari). Vuoi continuare?")) {
+            userPuntiTotali = 0;
+            avversari[0].puntiTotali = 124; // reset valori iniziali come da costruzione
+            avversari[1].puntiTotali = 118;
+            salvaSuLocalStorage();
+            aggiornaPunteggioTotaleDisplay();
+            aggiornaClassificaCompleta();
+            showToast("📋 Tutti i punteggi totali sono stati azzerati. Ricomincia da capo!");
+        }
+    }
+
+    function resetTotaleLega() {
+        if(confirm("🔄 Reset completo: cancellerai la tua squadra, punti e avversari torneranno ai valori iniziali?")) {
+            userTeam = [];
+            userPuntiTotali = 0;
+            avversari[0].puntiTotali = 124;
+            avversari[1].puntiTotali = 118;
+            salvaSuLocalStorage();
+            renderListaPiloti();
+            renderRosa();
+            aggiornaPunteggioTotaleDisplay();
+            aggiornaClassificaCompleta();
+            showToast("Reset completo effettuato. Buon divertimento!");
+        }
+    }
+
+    function aggiornaPunteggioTotaleDisplay() {
+        document.getElementById('punteggioTotaleDisplay').innerText = `Punti Totali: ${userPuntiTotali}`;
+        document.getElementById('puntiUser').innerText = userPuntiTotali;
+        const nomiTeam = userTeam.map(p => getPilotaById(p.id)?.nome.split(' ').pop() || p.id).join(', ');
+        document.getElementById('compUser').innerHTML = nomiTeam || "Nessuno";
+        document.getElementById('puntiIA').innerText = avversari[0].puntiTotali;
+        document.getElementById('puntiLegend').innerText = avversari[1].puntiTotali;
+        let squadraIA = avversari[0].squadra.map(id => getPilotaById(id)?.nome.split(' ').pop()).join(',');
+        let squadraLeg = avversari[1].squadra.map(id => getPilotaById(id)?.nome.split(' ').pop()).join(',');
+        document.getElementById('compIA').innerHTML = squadraIA;
+        document.getElementById('compLegend').innerHTML = squadraLeg;
+    }
+
+    function aggiornaClassificaCompleta() {
+        aggiornaPunteggioTotaleDisplay();
+    }
+
+    function showToast(msg, durata=3000) {
+        let toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, durata);
+    }
+
+    function salvaSuLocalStorage() {
+        const saveData = {
+            userTeam: userTeam,
+            userPuntiTotali: userPuntiTotali,
+            avversari: avversari
+        };
+        localStorage.setItem('fantamotoGP_save', JSON.stringify(saveData));
+    }
+
+    function caricaDaLocalStorage() {
+        const saved = localStorage.getItem('fantamotoGP_save');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                userTeam = data.userTeam || [];
+                userPuntiTotali = data.userPuntiTotali || 0;
+                if (data.avversari) avversari = data.avversari;
+                // assicurati che avversari abbiano struttura
+                if(!avversari[0]) avversari = [{ nome: "🤖 IA Racing", puntiTotali: 124, squadra: [2,5,9], capId:2 },{ nome: "🔥 Team Leggendario", puntiTotali: 118, squadra: [3,7,10], capId:3 }];
+                renderListaPiloti();
+                renderRosa();
+                aggiornaPunteggioTotaleDisplay();
+            } catch(e) { console.warn(e); }
+        } else {
+            renderListaPiloti();
+            renderRosa();
+        }
+    }
+
+    // eventi pulsanti
+    document.getElementById('simulaGaraBtn').addEventListener('click', simulaGara);
+    document.getElementById('azzeraGaraBtn').addEventListener('click', azzeraGara);
+    document.getElementById('resetTotaleBtn').addEventListener('click', resetTotaleLega);
+
+    caricaDaLocalStorage();
+    aggiornaClassificaCompleta();
+</script>
 </body>
 </html>
