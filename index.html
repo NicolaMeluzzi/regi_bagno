@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FantamotoGP Pro - Lega Scuderie & Wildcard</title>
+    <title>FantamotoGP Arena - Gioca con gli Amici</title>
     <style>
         * {
             margin: 0;
@@ -16,42 +16,150 @@
             background: linear-gradient(145deg, #0a0c15 0%, #0e1120 100%);
             min-height: 100vh;
             color: #f0f3fa;
-            padding: 1.5rem;
         }
 
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .login-card {
+            background: linear-gradient(135deg, #1a1f2e, #0f1422);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid rgba(255, 180, 60, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FFD966, #FF9F4A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #0f1725;
+            border: 1px solid #2d3e5a;
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #ff9f4a;
+            box-shadow: 0 0 0 2px rgba(255, 159, 74, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            border: none;
+            border-radius: 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #0a0f1e;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .login-note {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #aaa;
+        }
+
+        /* Main App (hidden until login) */
         .app-container {
             max-width: 1500px;
             margin: 0 auto;
+            padding: 1.5rem;
         }
 
-        /* Header premium */
+        /* Header */
         .hero {
             background: linear-gradient(135deg, rgba(20, 28, 45, 0.9), rgba(10, 15, 28, 0.95));
             backdrop-filter: blur(12px);
             border-radius: 2rem;
-            padding: 1.8rem 2.2rem;
+            padding: 1.5rem 2rem;
             margin-bottom: 2rem;
             border: 1px solid rgba(255, 180, 60, 0.3);
-            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.5);
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFD966, #FF9F4A, #FF6A3D);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .hero-stats {
+        .hero-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-top: 1.2rem;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD966, #FF9F4A, #FF6A3D);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-info {
+            background: #1e2a3a;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
 
         .punteggio-box {
@@ -60,22 +168,6 @@
             border-radius: 60px;
             font-weight: 700;
             border-left: 4px solid #ff9f4a;
-        }
-
-        .reset-btn {
-            background: rgba(180, 50, 50, 0.85);
-            border: none;
-            padding: 0.6rem 1.4rem;
-            border-radius: 2rem;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .reset-btn:hover {
-            background: #dc2626;
-            transform: scale(0.97);
         }
 
         /* Sezioni */
@@ -102,7 +194,7 @@
             background: rgba(25, 35, 55, 0.7);
             backdrop-filter: blur(4px);
             border-radius: 1.2rem;
-            padding: 1rem 1.2rem;
+            padding: 1rem;
             transition: all 0.2s ease;
             border: 1px solid rgba(255,255,255,0.08);
             cursor: pointer;
@@ -120,7 +212,6 @@
         .card-pilota.selezionato {
             background: linear-gradient(125deg, #1f3e4a, #15323d);
             border-left: 5px solid #ffaa33;
-            border-right: 1px solid #ffaa55;
         }
 
         .pilota-avatar {
@@ -132,7 +223,6 @@
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
-            font-weight: bold;
         }
 
         .info-pilota {
@@ -141,21 +231,12 @@
 
         .nome-pilota {
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .moto-team {
             font-size: 0.7rem;
             opacity: 0.7;
-        }
-
-        .punti-potenziale {
-            font-size: 0.75rem;
-            background: #00000055;
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 20px;
-            margin-top: 5px;
         }
 
         .badge-wildcard {
@@ -166,7 +247,7 @@
             margin-left: 8px;
         }
 
-        /* ROSA */
+        /* Rosa */
         .rosa-section {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 1.5rem;
@@ -189,7 +270,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: 500;
         }
 
         .btn-nomina-cap {
@@ -200,12 +280,6 @@
             font-size: 0.7rem;
             color: #ffcd7e;
             cursor: pointer;
-            transition: 0.1s;
-        }
-
-        .btn-nomina-cap:hover {
-            background: #ffaa33;
-            color: #1a1f2e;
         }
 
         .elimina-rosa {
@@ -214,32 +288,32 @@
             color: #ff8866;
             cursor: pointer;
             font-size: 1.1rem;
-            margin-left: 5px;
         }
 
-        /* Scuderie */
-        .scuderie-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .card-scuderia {
-            background: #0f1824cc;
-            border-radius: 1.2rem;
+        /* Classifica Amici */
+        .classifica-amici {
+            background: #050b16aa;
+            border-radius: 1.5rem;
             padding: 1rem;
-            border-left: 4px solid;
-            transition: 0.2s;
+            overflow-x: auto;
+            margin-top: 1rem;
         }
 
-        .card-scuderia.wildcard-attiva {
-            background: linear-gradient(145deg, #1f2a3c, #14202e);
-            border-left: 4px solid #c084fc;
-            box-shadow: 0 0 12px rgba(192,132,252,0.2);
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        /* Pannello gara */
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #2a3a50;
+        }
+
+        th {
+            color: #ffaa55;
+        }
+
         .race-panel {
             background: #0c1220cc;
             border-radius: 1.8rem;
@@ -268,35 +342,6 @@
         .btn-race.primary {
             background: #d97706;
             color: #0a0f1e;
-            font-weight: 800;
-        }
-
-        .btn-race.primary:hover {
-            background: #f59e0b;
-            transform: scale(1.02);
-        }
-
-        /* Classifica */
-        .classifica {
-            background: #050b16aa;
-            border-radius: 1.5rem;
-            padding: 1rem;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px 10px;
-            text-align: left;
-            border-bottom: 1px solid #2a3a50;
-        }
-
-        th {
-            color: #ffaa55;
         }
 
         .toast-msg {
@@ -310,8 +355,7 @@
             border-left: 5px solid #ffaa55;
             z-index: 1000;
             animation: fadeIn 0.2s ease;
-            font-weight: 500;
-            max-width: 350px;
+            max-width: 400px;
         }
 
         @keyframes fadeIn {
@@ -321,429 +365,392 @@
 
         footer {
             text-align: center;
-            margin-top: 2.5rem;
+            margin-top: 2rem;
             font-size: 0.75rem;
             opacity: 0.6;
         }
 
         @media (max-width: 700px) {
-            body { padding: 1rem; }
-            .hero h1 { font-size: 1.8rem; }
+            .app-container { padding: 1rem; }
+            .hero h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
-<div class="app-container">
-    <div class="hero">
-        <h1>🏁 FANTOMOTOGP PRO 🏍️</h1>
-        <div class="hero-stats">
-            <div>🏆 Lega Scuderie • 4 piloti + Capitano (x1.5) • Wildcard</div>
-            <div class="punteggio-box" id="punteggioTotaleDisplay">Punti Totali: 0</div>
-            <button class="reset-btn" id="resetTotaleBtn">🔄 Reset Campionato</button>
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <h2>🏁 FANTOMOTOGP ARENA</h2>
+            <p style="margin-bottom: 1.5rem; color: #ccc;">Accedi per giocare con gli amici</p>
+            <input type="text" id="loginEmailTel" class="login-input" placeholder="Email o numero di telefono" value="nicomeluzzi@gmail.com">
+            <input type="text" id="loginNome" class="login-input" placeholder="Il tuo nome / nickname" value="Nico">
+            <button id="loginBtn" class="login-btn">🎮 ENTRA IN GARA</button>
+            <div class="login-note">
+                🔐 Accedi con nicomeluzzi@gmail.com o 3277164461<br>
+                I tuoi dati e la tua squadra vengono salvati localmente
+            </div>
         </div>
     </div>
 
-    <!-- Selezione Piloti -->
-    <div class="section-title">
-        <span>⚡ Piloti MotoGP (Wildcard disponibili)</span>
-        <span style="font-size: 0.75rem;">max 4 piloti | scegli 1 capitano (x1.5)</span>
-    </div>
-    <div id="pilotiContainer" class="piloti-grid"></div>
+    <!-- Main App (hidden until login) -->
+    <div id="mainApp" style="display: none;">
+        <div class="app-container">
+            <div class="hero">
+                <div class="hero-header">
+                    <h1>🏁 FANTOMOTOGP ARENA 🏍️</h1>
+                    <div class="user-info">
+                        <span id="userNameDisplay">Utente</span>
+                        <span id="userContactDisplay"></span>
+                        <button id="logoutBtnMain" class="logout-btn">🚪 Esci</button>
+                    </div>
+                </div>
+                <div class="hero-header" style="margin-top: 1rem;">
+                    <div class="punteggio-box" id="punteggioTotaleDisplay">Punti Totali: 0</div>
+                    <div style="font-size: 0.8rem;">⭐ Capitano x1.5 • 🃏 Wildcard +3 scuderia</div>
+                </div>
+            </div>
 
-    <!-- La tua Squadra -->
-    <div class="rosa-section">
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-            <h3>🏍️ La tua squadra (max 4 piloti)</h3>
-            <span id="limiteMsg" style="color:#ffaa55;"></span>
+            <!-- Selezione Piloti (TUTTI i piloti MotoGP) -->
+            <div class="section-title">
+                <span>⚡ TUTTI I PILOTI MOTOGP 2025</span>
+                <span style="font-size: 0.75rem;">max 4 piloti | 1 capitano (x1.5) | wildcard bonus</span>
+            </div>
+            <div id="pilotiContainer" class="piloti-grid"></div>
+
+            <!-- La tua Squadra -->
+            <div class="rosa-section">
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                    <h3>🏍️ LA TUA SQUADRA (max 4 piloti)</h3>
+                    <span id="limiteMsg" style="color:#ffaa55;"></span>
+                </div>
+                <div id="rosaLista" class="rosa-list">
+                    <div style="opacity:0.6;">Nessun pilota selezionato. Clicca sulle card per costruire la squadra.</div>
+                </div>
+            </div>
+
+            <!-- Classifica Amici -->
+            <div class="section-title">
+                <span>👥 CLASSIFICA LEGA AMICI</span>
+                <button id="invitaAmicoBtn" style="background: #2d4a6e; border: none; padding: 0.3rem 1rem; border-radius: 2rem; cursor: pointer;">📧 Invita Amico</button>
+            </div>
+            <div class="classifica-amici">
+                <table>
+                    <thead>
+                        <tr><th>Pos</th><th>Giocatore</th><th>Contatto</th><th>Punti Totali</th><th>Squadra</th></tr>
+                    </thead>
+                    <tbody id="classificaBody"></tbody>
+                </table>
+                <div style="margin-top: 12px; font-size: 12px; text-align:center;">※ I tuoi amici possono accedere con la loro email e vedranno questa classifica condivisa</div>
+            </div>
+
+            <!-- Pannello Gara -->
+            <div class="race-panel">
+                <button class="btn-race primary" id="simulaGaraBtn">🏁 SIMULA GRAN PREMIO 🏁</button>
+                <button class="btn-race" id="azzeraGaraBtn">🔄 Reset Punteggi Totali</button>
+            </div>
+            <footer>• Ogni pilota ottiene punteggio casuale (5-28) • Capitano x1.5 • Scuderia: somma punti piloti + bonus wildcard (+3 se wildcard in squadra)</footer>
         </div>
-        <div id="rosaLista" class="rosa-list">
-            <div style="opacity:0.6;">Nessun pilota selezionato. Clicca sulle card per ingaggiare.</div>
-        </div>
-        <div style="margin-top: 12px; font-size: 0.7rem;">⭐ <strong>Capitano</strong> moltiplica i punti per 1.5 | 🃏 <strong>Wildcard</strong> = se presente in squadra, bonus +3 punti per la scuderia</div>
     </div>
 
-    <!-- Scuderie con wildcard -->
-    <div class="section-title">
-        <span>🏢 SCUDERIE & BONUS WILDCARD</span>
-    </div>
-    <div id="scuderieContainer" class="scuderie-grid"></div>
+    <script>
+        // ---------- TUTTI I PILOTI MOTOGP (22 piloti reali) ----------
+        const pilotiData = [
+            { id: 1, nome: "F. Bagnaia", team: "Ducati Lenovo", scuderia: "Ducati", valoreBase: 24, wildcard: false, icona: "🏍️", naz: "🇮🇹" },
+            { id: 2, nome: "J. Martin", team: "Prima Pramac", scuderia: "Ducati", valoreBase: 23, wildcard: false, icona: "⚡", naz: "🇪🇸" },
+            { id: 3, nome: "M. Marquez", team: "Gresini", scuderia: "Ducati", valoreBase: 25, wildcard: false, icona: "🐯", naz: "🇪🇸" },
+            { id: 4, nome: "E. Bastianini", team: "Ducati Lenovo", scuderia: "Ducati", valoreBase: 22, wildcard: false, icona: "🐍", naz: "🇮🇹" },
+            { id: 5, nome: "B. Binder", team: "Red Bull KTM", scuderia: "KTM", valoreBase: 20, wildcard: false, icona: "🔥", naz: "🇿🇦" },
+            { id: 6, nome: "P. Acosta", team: "Tech3 KTM", scuderia: "KTM", valoreBase: 21, wildcard: true, icona: "🚀", naz: "🇪🇸" },
+            { id: 7, nome: "F. Quartararo", team: "Monster Yamaha", scuderia: "Yamaha", valoreBase: 18, wildcard: false, icona: "🐺", naz: "🇫🇷" },
+            { id: 8, nome: "A. Rins", team: "Monster Yamaha", scuderia: "Yamaha", valoreBase: 16, wildcard: false, icona: "🏁", naz: "🇪🇸" },
+            { id: 9, nome: "M. Viñales", team: "Aprilia Racing", scuderia: "Aprilia", valoreBase: 19, wildcard: false, icona: "💨", naz: "🇪🇸" },
+            { id: 10, nome: "A. Espargaro", team: "Aprilia Racing", scuderia: "Aprilia", valoreBase: 18, wildcard: false, icona: "🌪️", naz: "🇪🇸" },
+            { id: 11, nome: "L. Marini", team: "Honda HRC", scuderia: "Honda", valoreBase: 14, wildcard: false, icona: "🏍️", naz: "🇮🇹" },
+            { id: 12, nome: "J. Zarco", team: "LCR Honda", scuderia: "Honda", valoreBase: 15, wildcard: true, icona: "🃏", naz: "🇫🇷" },
+            { id: 13, nome: "M. Oliveira", team: "Trackhouse", scuderia: "Aprilia", valoreBase: 16, wildcard: false, icona: "🇵🇹", naz: "🇵🇹" },
+            { id: 14, nome: "R. Fernandez", team: "Trackhouse", scuderia: "Aprilia", valoreBase: 14, wildcard: false, icona: "🇪🇸", naz: "🇪🇸" },
+            { id: 15, nome: "A. Marquez", team: "Gresini", scuderia: "Ducati", valoreBase: 17, wildcard: false, icona: "🌟", naz: "🇪🇸" },
+            { id: 16, nome: "F. Di Giannantonio", team: "VR46", scuderia: "Ducati", valoreBase: 17, wildcard: false, icona: "🇮🇹", naz: "🇮🇹" },
+            { id: 17, nome: "M. Bezzecchi", team: "VR46", scuderia: "Ducati", valoreBase: 18, wildcard: false, icona: "🇮🇹", naz: "🇮🇹" },
+            { id: 18, nome: "J. Miller", team: "Red Bull KTM", scuderia: "KTM", valoreBase: 16, wildcard: false, icona: "🇦🇺", naz: "🇦🇺" },
+            { id: 19, nome: "A. Fernandez", team: "Tech3 KTM", scuderia: "KTM", valoreBase: 14, wildcard: false, icona: "🇪🇸", naz: "🇪🇸" },
+            { id: 20, nome: "T. Nakagami", team: "LCR Honda", scuderia: "Honda", valoreBase: 12, wildcard: false, icona: "🇯🇵", naz: "🇯🇵" },
+            { id: 21, nome: "J. Mir", team: "Honda HRC", scuderia: "Honda", valoreBase: 13, wildcard: false, icona: "🇪🇸", naz: "🇪🇸" },
+            { id: 22, nome: "L. Savadori", team: "Aprilia Racing", scuderia: "Aprilia", valoreBase: 11, wildcard: true, icona: "🃏", naz: "🇮🇹" }
+        ];
 
-    <!-- Pulsanti Gara -->
-    <div class="race-panel">
-        <button class="btn-race primary" id="simulaGaraBtn">🏁 SIMULA GRAN PREMIO 🏁</button>
-        <button class="btn-race" id="azzeraGaraBtn">🔄 Reset Punteggi Totali</button>
-    </div>
+        // Sistema di utenti condiviso (localStorage per tutti gli account)
+        let currentUser = null;
+        let allUsers = []; // array di { id, contact, name, team, totalPoints, scuderiaPoints }
 
-    <!-- Classifica Generale Lega (Utente + 2 Avversari) -->
-    <div class="section-title">
-        <span>📊 CLASSIFICA GENERALE (PUNTI TOTALI)</span>
-    </div>
-    <div class="classifica">
-        <table>
-            <thead>
-                <tr><th>Pos</th><th>Team Manager</th><th>Punti Totali</th><th>Composizione Squadra</th><th>Scuderia Punti</th>
-            </thead>
-            <tbody id="classificaBody">
-                <tr><td>1</td><td>🏁 IL COMMISSARIO</td><td id="puntiUser">0</td><td id="compUser">-</td><td id="scuderiaUser">0</td></tr>
-                <tr><td>2</td><td>🤖 VR46 Racing</td><td id="puntiIA1">0</td><td id="compIA1">-</td><td id="scudIA1">0</td></tr>
-                <tr><td>3</td><td>🔥 Team Gresini</td><td id="puntiIA2">0</td><td id="compIA2">-</td><td id="scudIA2">0</td></tr>
-            </tbody>
-        </table>
-    </div>
-    <footer>• Ogni pilota ottiene punteggio casuale (5-28) in base al valore • Capitano x1.5 • Scuderia: somma punteggi piloti di quella casa + eventuale wildcard (+3 se il pilota wildcard è in squadra) • Wildcard indicata con 🃏</footer>
-</div>
-
-<script>
-    // ---------- DATABASE PILOTI con Scuderie e flag wildcard ----------
-    const pilotiData = [
-        { id: 1, nome: "F. Bagnaia", team: "Ducati Lenovo", scuderia: "Ducati", valoreBase: 24, wildcard: false, icona: "🏍️", naz: "🇮🇹" },
-        { id: 2, nome: "J. Martin", team: "Prima Pramac", scuderia: "Ducati", valoreBase: 23, wildcard: false, icona: "⚡", naz: "🇪🇸" },
-        { id: 3, nome: "M. Marquez", team: "Gresini", scuderia: "Ducati", valoreBase: 25, wildcard: false, icona: "🐯", naz: "🇪🇸" },
-        { id: 4, nome: "E. Bastianini", team: "Ducati Lenovo", scuderia: "Ducati", valoreBase: 22, wildcard: false, icona: "🐍", naz: "🇮🇹" },
-        { id: 5, nome: "B. Binder", team: "Red Bull KTM", scuderia: "KTM", valoreBase: 20, wildcard: false, icona: "🔥", naz: "🇿🇦" },
-        { id: 6, nome: "P. Acosta", team: "Tech3 KTM", scuderia: "KTM", valoreBase: 21, wildcard: true, icona: "🚀", naz: "🇪🇸" },  // WILDCARD
-        { id: 7, nome: "F. Quartararo", team: "Monster Yamaha", scuderia: "Yamaha", valoreBase: 18, wildcard: false, icona: "🐺", naz: "🇫🇷" },
-        { id: 8, nome: "A. Rins", team: "Monster Yamaha", scuderia: "Yamaha", valoreBase: 16, wildcard: false, icona: "🏁", naz: "🇪🇸" },
-        { id: 9, nome: "M. Viñales", team: "Aprilia Racing", scuderia: "Aprilia", valoreBase: 19, wildcard: false, icona: "💨", naz: "🇪🇸" },
-        { id: 10, nome: "A. Espargaro", team: "Aprilia Racing", scuderia: "Aprilia", valoreBase: 18, wildcard: false, icona: "🌪️", naz: "🇪🇸" },
-        { id: 11, nome: "L. Marini", team: "Honda HRC", scuderia: "Honda", valoreBase: 14, wildcard: false, icona: "🏍️", naz: "🇮🇹" },
-        { id: 12, nome: "J. Zarco", team: "LCR Honda", scuderia: "Honda", valoreBase: 15, wildcard: true, icona: "🃏", naz: "🇫🇷" }  // WILDCARD
-    ];
-
-    // Struttura utente
-    let userTeam = [];      // { id, isCapitano }
-    let userPuntiTotali = 0;
-    let userScuderiaPoints = 0;   // aggiornato dopo ogni gara
-
-    // Avversari (team fittizi con rose e capitano)
-    let avversari = [
-        { nome: "🤖 VR46 Racing", puntiTotali: 158, squadra: [1, 3, 7, 11], capId: 3, scuderiaPunti: 0 },
-        { nome: "🔥 Team Gresini", puntiTotali: 142, squadra: [2, 5, 6, 9], capId: 6, scuderiaPunti: 0 }
-    ];
-
-    // Helper
-    function getPilotaById(id) {
-        return pilotiData.find(p => p.id === id);
-    }
-
-    // Calcola punteggio per un pilota (base casuale + valoreBase)
-    function calcolaPunteggioPilota(pilota) {
-        let casuale = Math.floor(Math.random() * 21) + 5; // 5-25
-        let bonusValore = Math.floor(pilota.valoreBase / 6);
-        let punti = Math.min(32, Math.max(3, casuale + bonusValore - 2));
-        return punti;
-    }
-
-    // Simula gara: calcola punti per utente, per avversari, per scuderie
-    function simulaGara() {
-        if (userTeam.length === 0) {
-            showToast("❌ Devi selezionare almeno 1 piloto per partecipare al GP!");
-            return;
-        }
-
-        // ----- PUNTEGGI UTENTE -----
-        let puntiTappaUser = 0;
-        let dettagli = [];
-        let scuderieMapUser = new Map(); // scuderia -> somma punti base (senza cap moltiplicatore)
-        
-        userTeam.forEach(membro => {
-            const pilota = getPilotaById(membro.id);
-            let puntiBase = calcolaPunteggioPilota(pilota);
-            let puntiFinali = puntiBase;
-            if (membro.isCapitano) {
-                puntiFinali = Math.floor(puntiBase * 1.5);
+        // Funzioni di gestione utenti
+        function loadAllUsers() {
+            const stored = localStorage.getItem('fantamotoGP_allUsers');
+            if (stored) {
+                allUsers = JSON.parse(stored);
+            } else {
+                // Utenti demo di partenza
+                allUsers = [
+                    { id: "nicomeluzzi@gmail.com", contact: "nicomeluzzi@gmail.com", name: "Nico Meluzzi", team: [], totalPoints: 0, scuderiaPoints: 0, captainId: null },
+                    { id: "3277164461", contact: "3277164461", name: "Nico (Telefono)", team: [], totalPoints: 0, scuderiaPoints: 0, captainId: null },
+                    { id: "mario@example.com", contact: "mario@example.com", name: "Mario Rossi", team: [], totalPoints: 0, scuderiaPoints: 0, captainId: null },
+                    { id: "luca@example.com", contact: "luca@example.com", name: "Luca Bianchi", team: [], totalPoints: 85, scuderiaPoints: 42, captainId: 3, team: [{id:1, isCapitano:false},{id:3,isCapitano:true},{id:7,isCapitano:false},{id:11,isCapitano:false}] }
+                ];
             }
-            puntiTappaUser += puntiFinali;
-            dettagli.push(`${pilota.nome}: ${puntiBase} pts → ${puntiFinali} ${membro.isCapitano ? '(cap x1.5)' : ''}`);
+            // Assicura che ogni utente abbia campi necessari
+            allUsers = allUsers.map(u => ({ ...u, team: u.team || [], totalPoints: u.totalPoints || 0, scuderiaPoints: u.scuderiaPoints || 0 }));
+            saveAllUsers();
+        }
+
+        function saveAllUsers() {
+            localStorage.setItem('fantamotoGP_allUsers', JSON.stringify(allUsers));
+        }
+
+        function findUserByContact(contact) {
+            return allUsers.find(u => u.contact === contact || u.id === contact);
+        }
+
+        function login(contact, displayName) {
+            let user = findUserByContact(contact);
+            if (!user) {
+                // Crea nuovo utente
+                user = {
+                    id: contact,
+                    contact: contact,
+                    name: displayName || contact.split('@')[0],
+                    team: [],
+                    totalPoints: 0,
+                    scuderiaPoints: 0,
+                    captainId: null
+                };
+                allUsers.push(user);
+                saveAllUsers();
+            } else if (displayName && user.name !== displayName) {
+                user.name = displayName;
+                saveAllUsers();
+            }
+            currentUser = user;
+            localStorage.setItem('fantamotoGP_currentUser', JSON.stringify({ contact: user.contact, name: user.name }));
+            return user;
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('fantamotoGP_currentUser');
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function saveCurrentUserData() {
+            if (currentUser) {
+                const index = allUsers.findIndex(u => u.contact === currentUser.contact);
+                if (index !== -1) {
+                    allUsers[index] = { ...currentUser };
+                    saveAllUsers();
+                }
+            }
+        }
+
+        // Funzioni di gioco
+        function getPilotaById(id) {
+            return pilotiData.find(p => p.id === id);
+        }
+
+        function calcolaPunteggioPilota(pilota) {
+            let casuale = Math.floor(Math.random() * 22) + 5;
+            let bonusValore = Math.floor(pilota.valoreBase / 6);
+            return Math.min(32, Math.max(3, casuale + bonusValore - 1));
+        }
+
+        function simulaGara() {
+            if (!currentUser.team || currentUser.team.length === 0) {
+                showToast("❌ Devi selezionare almeno 1 piloto per simulare il GP!");
+                return;
+            }
+
+            let puntiTappaUser = 0;
+            let dettagli = [];
+            let scudMap = new Map();
             
-            // Accumula per scuderia (punti base prima del cap, per somma scuderia)
-            let current = scuderieMapUser.get(pilota.scuderia) || 0;
-            scuderieMapUser.set(pilota.scuderia, current + puntiBase);
-        });
-        
-        // Calcolo punti scuderia utente: somma dei totali per scuderia + bonus wildcard
-        let punteggioScuderiaUser = 0;
-        for (let [scud, somma] of scuderieMapUser.entries()) {
-            punteggioScuderiaUser += somma;
-        }
-        // Bonus wildcard: se nella squadra c'è un pilota con wildcard=true, aggiungiamo +3 alla scuderia (bonus extra)
-        const haWildcard = userTeam.some(m => getPilotaById(m.id).wildcard === true);
-        if (haWildcard) {
-            punteggioScuderiaUser += 3;
-            dettagli.push(`🃏 Bonus WILDCARD: +3 punti scuderia!`);
-        }
-        
-        userPuntiTotali += puntiTappaUser;
-        userScuderiaPoints = punteggioScuderiaUser;  // salviamo per visual classifica
-        
-        // ----- PUNTEGGI AVVERSARI (con capitano x1.5 e wildcard) -----
-        for (let av of avversari) {
-            let puntiTappaAv = 0;
-            let scudMapAv = new Map();
-            let haWildcardAv = false;
-            for (let idPil of av.squadra) {
-                const pil = getPilotaById(idPil);
-                let puntiBase = calcolaPunteggioPilota(pil);
+            currentUser.team.forEach(membro => {
+                const pilota = getPilotaById(membro.id);
+                let puntiBase = calcolaPunteggioPilota(pilota);
                 let puntiFinali = puntiBase;
-                if (av.capId === idPil) {
+                if (membro.isCapitano) {
                     puntiFinali = Math.floor(puntiBase * 1.5);
                 }
-                puntiTappaAv += puntiFinali;
-                let curr = scudMapAv.get(pil.scuderia) || 0;
-                scudMapAv.set(pil.scuderia, curr + puntiBase);
-                if (pil.wildcard) haWildcardAv = true;
+                puntiTappaUser += puntiFinali;
+                dettagli.push(`${pilota.nome}: ${puntiBase} → ${puntiFinali} pts ${membro.isCapitano ? '(cap x1.5)' : ''}`);
+                
+                let curr = scudMap.get(pilota.scuderia) || 0;
+                scudMap.set(pilota.scuderia, curr + puntiBase);
+            });
+            
+            let puntiScuderia = 0;
+            for (let val of scudMap.values()) puntiScuderia += val;
+            const haWildcard = currentUser.team.some(m => getPilotaById(m.id).wildcard);
+            if (haWildcard) {
+                puntiScuderia += 3;
+                dettagli.push(`🃏 Bonus WILDCARD: +3 punti scuderia!`);
             }
-            let scudPuntiAv = 0;
-            for (let s of scudMapAv.values()) scudPuntiAv += s;
-            if (haWildcardAv) scudPuntiAv += 3;
-            av.puntiTotali += puntiTappaAv;
-            av.scuderiaPunti = scudPuntiAv;
+            
+            currentUser.totalPoints += puntiTappaUser;
+            currentUser.scuderiaPoints = puntiScuderia;
+            saveCurrentUserData();
+            
+            showToast(`🏁 GP CONCLUSO! +${puntiTappaUser} punti\n${dettagli.slice(0,3).join('\n')}${dettagli.length>3?'...' : ''}\n🏢 Scuderia: ${puntiScuderia} pts`, 5000);
+            aggiornaUI();
         }
-        
-        // Messaggio riepilogo
-        let msg = `🏁 GP CONCLUSO! 🏁\nHai totalizzato ${puntiTappaUser} punti nella gara.\n${dettagli.join('\n')}\n🏢 Punti Scuderia: ${punteggioScuderiaUser}`;
-        showToast(msg, 5000);
-        
-        aggiornaUICompleta();
-        salvaSuLocalStorage();
-    }
-    
-    // Azzera totali (reset campionato)
-    function resetCampionato() {
-        if (confirm("⚠️ Attenzione! Resetterai TUTTI i punteggi totali, la tua squadra rimarrà ma i punti torneranno a zero. Procedere?")) {
-            userPuntiTotali = 0;
-            userScuderiaPoints = 0;
-            avversari[0].puntiTotali = 158;
-            avversari[1].puntiTotali = 142;
-            avversari[0].scuderiaPunti = 0;
-            avversari[1].scuderiaPunti = 0;
-            aggiornaUICompleta();
-            salvaSuLocalStorage();
-            showToast("📋 Tutti i punteggi totali azzerati! Nuova stagione iniziata.");
+
+        function resetPunteggi() {
+            if (confirm("⚠️ Resetta tutti i punteggi totali della tua squadra? Gli amici restano invariati.")) {
+                currentUser.totalPoints = 0;
+                currentUser.scuderiaPoints = 0;
+                saveCurrentUserData();
+                aggiornaUI();
+                showToast("Punteggi azzerati!");
+            }
         }
-    }
-    
-    // Reset totale lega (anche squadra)
-    function resetTotaleLega() {
-        if (confirm("🔄 RESET COMPLETO: cancellerai tutta la squadra, punti e avversari ai valori iniziali. Continuare?")) {
-            userTeam = [];
-            userPuntiTotali = 0;
-            userScuderiaPoints = 0;
-            avversari[0].puntiTotali = 158;
-            avversari[1].puntiTotali = 142;
-            avversari[0].scuderiaPunti = 0;
-            avversari[1].scuderiaPunti = 0;
-            avversari[0].squadra = [1, 3, 7, 11]; avversari[0].capId = 3;
-            avversari[1].squadra = [2, 5, 6, 9]; avversari[1].capId = 6;
+
+        // Gestione squadra
+        function aggiungiPilota(id) {
+            if (currentUser.team.length >= 4) {
+                showToast("Limite massimo: 4 piloti!");
+                return false;
+            }
+            if (currentUser.team.some(p => p.id === id)) {
+                showToast("Pilota già in squadra!");
+                return false;
+            }
+            const nuovo = { id: id, isCapitano: false };
+            currentUser.team.push(nuovo);
+            if (currentUser.team.length === 1) {
+                currentUser.team[0].isCapitano = true;
+                showToast(`⭐ ${getPilotaById(id).nome} è il CAPITANO! (x1.5 punti)`);
+            } else {
+                showToast(`➕ ${getPilotaById(id).nome} aggiunto alla squadra.`);
+            }
+            saveCurrentUserData();
             renderListaPiloti();
             renderRosa();
-            aggiornaUICompleta();
-            salvaSuLocalStorage();
-            showToast("✅ Reset totale effettuato. Buon divertimento!");
+            aggiornaClassifica();
+            return true;
         }
-    }
-    
-    // Gestione rosa (max 4 piloti)
-    function aggiungiPilota(id) {
-        if (userTeam.length >= 4) {
-            showToast("Limite massimo raggiunto: 4 piloti! Rimuovine uno prima.");
-            return false;
-        }
-        if (userTeam.some(p => p.id === id)) {
-            showToast("Pilota già in squadra!");
-            return false;
-        }
-        const nuovo = { id: id, isCapitano: false };
-        userTeam.push(nuovo);
-        if (userTeam.length === 1) {
-            userTeam[0].isCapitano = true;
-            showToast(`⭐ ${getPilotaById(id).nome} è il CAPITANO! (x1.5 punti)`);
-        } else {
-            showToast(`➕ ${getPilotaById(id).nome} aggiunto alla squadra.`);
-        }
-        renderListaPiloti();
-        renderRosa();
-        salvaSuLocalStorage();
-        return true;
-    }
-    
-    function rimuoviPilota(id) {
-        const index = userTeam.findIndex(p => p.id === id);
-        if (index !== -1) {
-            const wasCapitano = userTeam[index].isCapitano;
-            userTeam.splice(index, 1);
-            if (wasCapitano && userTeam.length > 0) {
-                userTeam[0].isCapitano = true;
-                showToast(`📢 Nuovo capitano: ${getPilotaById(userTeam[0].id).nome}`);
-            }
-            renderListaPiloti();
-            renderRosa();
-            salvaSuLocalStorage();
-        }
-    }
-    
-    function cambiaCapitano(id) {
-        userTeam.forEach(p => p.isCapitano = false);
-        const target = userTeam.find(p => p.id === id);
-        if (target) target.isCapitano = true;
-        renderRosa();
-        renderListaPiloti();
-        showToast(`👑 ${getPilotaById(id).nome} è il nuovo capitano! (punti x1.5)`);
-        salvaSuLocalStorage();
-    }
-    
-    // Render griglia piloti
-    function renderListaPiloti() {
-        const container = document.getElementById('pilotiContainer');
-        if (!container) return;
-        let html = '';
-        pilotiData.forEach(p => {
-            const isSelected = userTeam.some(m => m.id === p.id);
-            const disabled = userTeam.length >= 4 && !isSelected;
-            const wildcardBadge = p.wildcard ? '<span class="badge-wildcard">🃏 WILDCARD</span>' : '';
-            html += `
-                <div class="card-pilota ${isSelected ? 'selezionato' : ''}" data-id="${p.id}" style="${disabled ? 'opacity:0.5; cursor:not-allowed;' : ''}">
-                    <div class="pilota-avatar">${p.icona}</div>
-                    <div class="info-pilota">
-                        <div class="nome-pilota">${p.naz} ${p.nome} ${wildcardBadge}</div>
-                        <div class="moto-team">${p.team} • ${p.scuderia}</div>
-                        <div class="punti-potenziale">potenziale: ${p.valoreBase} pts</div>
-                    </div>
-                    ${isSelected ? '✅' : (userTeam.length>=4 ? '🔒' : '➕')}
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-        document.querySelectorAll('.card-pilota').forEach(card => {
-            const id = parseInt(card.dataset.id);
-            card.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isSelected = userTeam.some(m => m.id === id);
-                if (isSelected) {
-                    showToast(`${getPilotaById(id).nome} è già in squadra. Per rimuoverlo usa il cestino nella rosa.`);
-                } else if (userTeam.length < 4) {
-                    aggiungiPilota(id);
-                } else {
-                    showToast("Limite 4 piloti raggiunto!");
+
+        function rimuoviPilota(id) {
+            const index = currentUser.team.findIndex(p => p.id === id);
+            if (index !== -1) {
+                const wasCapitano = currentUser.team[index].isCapitano;
+                currentUser.team.splice(index, 1);
+                if (wasCapitano && currentUser.team.length > 0) {
+                    currentUser.team[0].isCapitano = true;
+                    showToast(`📢 Nuovo capitano: ${getPilotaById(currentUser.team[0].id).nome}`);
                 }
-            });
-        });
-    }
-    
-    // Render rosa con bottoni capitano/elimina
-    function renderRosa() {
-        const container = document.getElementById('rosaLista');
-        const limiteSpan = document.getElementById('limiteMsg');
-        if (!container) return;
-        if (userTeam.length === 0) {
-            container.innerHTML = '<div style="opacity:0.6;">Nessun pilota selezionato. Clicca sulle card per costruire la squadra (max 4).</div>';
-            limiteSpan.innerText = '';
-            return;
-        }
-        let html = '';
-        userTeam.forEach(m => {
-            const p = getPilotaById(m.id);
-            const isCap = m.isCapitano;
-            html += `
-                <div class="rosa-item">
-                    <span>${p.icona} ${p.nome} (${p.scuderia})</span>
-                    ${isCap ? '<span style="background:#ffaa33;color:#111;padding:2px 10px;border-radius:20px;font-size:0.7rem;">⭐ CAPITANO x1.5</span>' : `<button class="btn-nomina-cap" data-id="${m.id}">Nomina Cap</button>`}
-                    <button class="elimina-rosa" data-id="${m.id}">🗑️</button>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-        limiteSpan.innerText = `Piloti: ${userTeam.length}/4 | Capitano selezionato: ${userTeam.find(p=>p.isCapitano) ? getPilotaById(userTeam.find(p=>p.isCapitano).id).nome : 'nessuno'}`;
-        
-        document.querySelectorAll('.elimina-rosa').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(btn.dataset.id);
-                rimuoviPilota(id);
-                e.stopPropagation();
-            });
-        });
-        document.querySelectorAll('.btn-nomina-cap').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(btn.dataset.id);
-                cambiaCapitano(id);
-                e.stopPropagation();
-            });
-        });
-        aggiornaScuderieUI();
-    }
-    
-    // Render scuderie con punti correnti (mostra bonus wildcard se presente)
-    function aggiornaScuderieUI() {
-        const container = document.getElementById('scuderieContainer');
-        if (!container) return;
-        // Raggruppa piloti utente per scuderia
-        let scudMap = new Map();
-        userTeam.forEach(m => {
-            const p = getPilotaById(m.id);
-            let val = scudMap.get(p.scuderia) || { piloti: [], punti: 0, wildcardPresente: false };
-            val.piloti.push(p.nome);
-            if (p.wildcard) val.wildcardPresente = true;
-            scudMap.set(p.scuderia, val);
-        });
-        let html = '';
-        for (let [scud, data] of scudMap.entries()) {
-            const wildBonus = data.wildcardPresente ? ' +3 (wildcard attiva)' : '';
-            html += `
-                <div class="card-scuderia ${data.wildcardPresente ? 'wildcard-attiva' : ''}" style="border-left-color: #ffaa55;">
-                    <strong>🏢 ${scud}</strong><br>
-                    Piloti: ${data.piloti.join(', ')}<br>
-                    <span style="font-size:0.8rem;">🎯 Bonus wildcard: ${data.wildcardPresente ? 'SÌ (+3 punti scuderia)' : 'NO'}</span>
-                </div>
-            `;
-        }
-        if (userTeam.length === 0) html = '<div style="padding:1rem; text-align:center;">Seleziona piloti per vedere le scuderie</div>';
-        container.innerHTML = html;
-    }
-    
-    // Aggiorna classifica e punti totali
-    function aggiornaUICompleta() {
-        document.getElementById('punteggioTotaleDisplay').innerHTML = `Punti Totali: ${userPuntiTotali}`;
-        document.getElementById('puntiUser').innerText = userPuntiTotali;
-        const compNomi = userTeam.map(m => getPilotaById(m.id).nome.split(' ')[0]).join(', ');
-        document.getElementById('compUser').innerHTML = compNomi || "Nessuno";
-        document.getElementById('scuderiaUser').innerHTML = userScuderiaPoints;
-        
-        document.getElementById('puntiIA1').innerText = avversari[0].puntiTotali;
-        document.getElementById('compIA1').innerHTML = avversari[0].squadra.map(id => getPilotaById(id).nome.split(' ')[0]).join(',');
-        document.getElementById('scudIA1').innerHTML = avversari[0].scuderiaPunti || 0;
-        
-        document.getElementById('puntiIA2').innerText = avversari[1].puntiTotali;
-        document.getElementById('compIA2').innerHTML = avversari[1].squadra.map(id => getPilotaById(id).nome.split(' ')[0]).join(',');
-        document.getElementById('scudIA2').innerHTML = avversari[1].scuderiaPunti || 0;
-        
-        aggiornaScuderieUI();
-    }
-    
-    function showToast(msg, durata = 4000) {
-        let toast = document.createElement('div');
-        toast.className = 'toast-msg';
-        toast.innerText = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), durata);
-    }
-    
-    // LocalStorage
-    function salvaSuLocalStorage() {
-        const data = {
-            userTeam, userPuntiTotali, userScuderiaPoints,
-            avversari: avversari.map(a => ({ ...a }))
-        };
-        localStorage.setItem('fantamotoGP_pro', JSON.stringify(data));
-    }
-    
-    function caricaDaLocalStorage() {
-        const saved = localStorage.getItem('fantamotoGP_pro');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                userTeam = data.userTeam || [];
-                userPuntiTotali = data.userPuntiTotali || 0;
-                userScuderiaPoints = data.userScuderiaPoints || 0;
-                if (data.avversari) avversari = data.avversari;
+                saveCurrentUserData();
                 renderListaPiloti();
-               
+                renderRosa();
+                aggiornaClassifica();
+            }
+        }
+
+        function cambiaCapitano(id) {
+            currentUser.team.forEach(p => p.isCapitano = false);
+            const target = currentUser.team.find(p => p.id === id);
+            if (target) target.isCapitano = true;
+            saveCurrentUserData();
+            renderRosa();
+            renderListaPiloti();
+            showToast(`👑 ${getPilotaById(id).nome} è il nuovo capitano!`);
+        }
+
+        function renderListaPiloti() {
+            const container = document.getElementById('pilotiContainer');
+            if (!container) return;
+            let html = '';
+            pilotiData.forEach(p => {
+                const isSelected = currentUser.team?.some(m => m.id === p.id) || false;
+                const disabled = currentUser.team.length >= 4 && !isSelected;
+                const wildcardBadge = p.wildcard ? '<span class="badge-wildcard">🃏 WILDCARD</span>' : '';
+                html += `
+                    <div class="card-pilota ${isSelected ? 'selezionato' : ''}" data-id="${p.id}" style="${disabled ? 'opacity:0.5; cursor:not-allowed;' : ''}">
+                        <div class="pilota-avatar">${p.icona}</div>
+                        <div class="info-pilota">
+                            <div class="nome-pilota">${p.naz} ${p.nome} ${wildcardBadge}</div>
+                            <div class="moto-team">${p.team} • ${p.scuderia}</div>
+                            <div style="font-size:0.7rem;">valore: ${p.valoreBase} pts</div>
+                        </div>
+                        ${isSelected ? '✅' : (currentUser.team.length>=4 ? '🔒' : '➕')}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('.card-pilota').forEach(card => {
+                const id = parseInt(card.dataset.id);
+                card.addEventListener('click', () => {
+                    const isSelected = currentUser.team.some(m => m.id === id);
+                    if (!isSelected && currentUser.team.length < 4) aggiungiPilota(id);
+                    else if (isSelected) showToast(`${getPilotaById(id).nome} è già in squadra. Usa il cestino per rimuoverlo.`);
+                    else showToast("Limite 4 piloti raggiunto!");
+                });
+            });
+        }
+
+        function renderRosa() {
+            const container = document.getElementById('rosaLista');
+            const limiteSpan = document.getElementById('limiteMsg');
+            if (!currentUser.team || currentUser.team.length === 0) {
+                container.innerHTML = '<div style="opacity:0.6;">Nessun pilota selezionato. Scegli fino a 4 piloti.</div>';
+                if(limiteSpan) limiteSpan.innerText = '';
+                return;
+            }
+            let html = '';
+            currentUser.team.forEach(m => {
+                const p = getPilotaById(m.id);
+                html += `
+                    <div class="rosa-item">
+                        <span>${p.icona} ${p.nome} (${p.scuderia})</span>
+                        ${m.isCapitano ? '<span style="background:#ffaa33;color:#111;padding:2px 10px;border-radius:20px;">⭐ CAPITANO x1.5</span>' : `<button class="btn-nomina-cap" data-id="${m.id}">Nomina Cap</button>`}
+                        <button class="elimina-rosa" data-id="${m.id}">🗑️</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            if(limiteSpan) limiteSpan.innerText = `Piloti: ${currentUser.team.length}/4 | Capitano: ${currentUser.team.find(p=>p.isCapitano) ? getPilotaById(currentUser.team.find(p=>p.isCapitano).id).nome : 'nessuno'}`;
+            
+            document.querySelectorAll('.elimina-rosa').forEach(btn => {
+                btn.addEventListener('click', (e) => { rimuoviPilota(parseInt(btn.dataset.id)); e.stopPropagation(); });
+            });
+            document.querySelectorAll('.btn-nomina-cap').forEach(btn => {
+                btn.addEventListener('click', (e) => { cambiaCapitano(parseInt(btn.dataset.id)); e.stopPropagation(); });
+            });
+        }
+
+        function aggiornaClassifica() {
+            const sorted = [...allUsers].sort((a,b) => b.totalPoints - a.totalPoints);
+            const tbody = document.getElementById('classificaBody');
+            tbody.innerHTML = '';
+            sorted.forEach((user, idx) => {
+                const squadraNomi = user.team?.map(t => getPilotaById(t.id)?.nome.split(' ')[0] || '?').join(', ') || '-';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${idx+1}</td>
+                        <td>${user.name}</td>
+                        <td>${user.contact}</td>
+                        <td><strong>${user.totalPoints}</strong></td>
+                        <td style="font-size:0.75rem;">${squadraNomi}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function aggiornaUI() {
+            document.getElementById('punteggioTotaleDisplay').innerHTML = `Punti Totali: ${currentUser.totalPoints}`;
+            document.getElementById('userNameDisplay').innerHTML = currentUser.name;
+            document.getElementById('userContactDisplay').innerHTML = currentUser.contact;
+            renderListaPiloti();
+            renderRosa();
+            aggiornaClassifica();
+        }
+
+        function invitaAmico() {
+            const shareText = `Unisciti a me su FantamotoGP Arena! Accedi con la tua email e crea la
