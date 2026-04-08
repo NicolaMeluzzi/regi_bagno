@@ -3,154 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Rifugio LGBTQ+ | Pub & Vibes a Palazzuolo sul Senio</title>
+    <title>QUEER OAK | Palazzuolo sul Senio</title>
     <script src="https://tailwindcss.com"></script>
     <link href="https://cloudflare.com" rel="stylesheet">
     <style>
         @import url('https://googleapis.com');
-        
-        body { font-family: 'Montserrat', sans-serif; }
-        h1, h2, .font-serif { font-family: 'Playfair Display', serif; }
-        
-        .rainbow-gradient {
-            background: linear-gradient(90deg, #ff0000, #ff8700, #ffd300, #deff0a, #a1ff0a, #0aff99, #0aefff, #147df5, #580aff, #be0aff);
-            height: 4px;
+
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00f2ff;
+            --amber: #f59e0b;
+            --bg-dark: #0a0a0c;
         }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, .font-syne { font-family: 'Syne', sans-serif; }
+
+        /* Sfondo Animato con Gradienti */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0c 100%);
+            z-index: -1;
+        }
+
+        .glow-orb {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+            filter: blur(120px);
+            opacity: 0.15;
+            border-radius: 50%;
+            animation: float 20s infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        /* Effetto Vetro (Glassmorphism) */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-10px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Testo Arcobaleno Neon */
+        .text-rainbow {
+            background: linear-gradient(to right, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        /* Bottone Custom */
+        .btn-neon {
+            position: relative;
+            padding: 1rem 2.5rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 2px;
+            transition: 0.5s;
+            overflow: hidden;
+            border: 2px solid var(--amber);
+            color: var(--amber);
+        }
+
+        .btn-neon:hover {
+            background: var(--amber);
+            color: #000;
+            box-shadow: 0 0 30px var(--amber);
+        }
+
+        /* Navbar Blur */
+        nav {
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        /* Sezione Curve */
+        .curvy-divider {
+            height: 100px;
+            width: 100%;
+            background: var(--bg-dark);
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 0% 100%);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+
     </style>
 </head>
-<body class="bg-stone-900 text-stone-100">
+<body>
 
-    <div class="rainbow-gradient"></div>
+    <div class="bg-glow">
+        <div class="glow-orb" style="top: 10%; left: -10%;"></div>
+        <div class="glow-orb" style="bottom: 10%; right: -10%; animation-delay: -5s;"></div>
+    </div>
 
-    <!-- Header -->
-    <nav class="p-6 flex justify-between items-center bg-stone-800/50 backdrop-blur-md sticky top-0 z-50">
-        <div class="text-2xl font-bold tracking-tighter">
-            QUEER<span class="text-amber-500">OAK</span> PUB
+    <!-- Nav -->
+    <nav class="fixed w-full z-[100] px-8 py-4 flex justify-between items-center border-b border-white/10">
+        <div class="text-3xl font-black tracking-tighter uppercase">
+            Queer<span class="text-amber-500 italic">Oak</span>
         </div>
-        <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-semibold">
-            <a href="#storia" class="hover:text-amber-500 transition">Noi</a>
-            <a href="#menu" class="hover:text-amber-500 transition">Menu</a>
-            <a href="#eventi" class="hover:text-amber-500 transition">Eventi</a>
-            <a href="#contatti" class="hover:text-amber-500 transition">Dove Siamo</a>
+        <div class="hidden md:flex space-x-10 text-[10px] uppercase tracking-[0.3em] font-bold">
+            <a href="#about" class="hover:text-amber-500 transition">Story</a>
+            <a href="#menu" class="hover:text-amber-500 transition">Craft Beer</a>
+            <a href="#vibes" class="hover:text-amber-500 transition">Vibes</a>
+            <a href="#contact" class="hover:text-amber-500 transition">Find Us</a>
         </div>
-        <a href="https://wa.me" class="bg-amber-600 hover:bg-amber-500 px-5 py-2 rounded-full text-sm font-bold transition">Prenota</a>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="relative h-[80vh] flex items-center justify-center text-center px-4 overflow-hidden">
-        <div class="absolute inset-0 bg-black/60 z-10"></div>
-        <!-- Placeholder per immagine di sfondo -->
-        <div class="absolute inset-0 bg-[url('https://unsplash.com')] bg-cover bg-center opacity-40"></div>
+    <!-- Hero -->
+    <section class="relative min-h-screen flex flex-col justify-center items-center text-center p-6 pt-24">
+        <div class="space-y-4">
+            <h2 class="text-amber-500 font-bold tracking-[0.5em] uppercase text-sm">Appennino Tosco-Romagnolo</h2>
+            <h1 class="text-6xl md:text-9xl font-extrabold leading-none uppercase">
+                Feel <span class="text-rainbow">Free</span><br>Drink <span class="italic text-white">Proud</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-stone-400 py-8 text-lg font-light">
+                Un pub gestito da una coppia che crede nell'amore e nella buona birra. Ti aspettiamo nel borgo di Palazzuolo sul Senio.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 pt-4">
+                <a href="#menu" class="btn-neon">Il Menu</a>
+                <a href="https://wa.me" class="px-10 py-4 font-bold border-b-2 border-white hover:border-amber-500 transition">Vieni a trovarci</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Storia Asimmetrica -->
+    <section id="about" class="py-32 px-6 overflow-hidden">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+            <div class="relative">
+                <div class="absolute -top-10 -left-10 w-32 h-32 border-l-4 border-t-4 border-amber-500"></div>
+                <h2 class="text-5xl font-black mb-8 leading-tight">Marco & Luca:<br>Dalla Città alla Montagna.</h2>
+                <p class="text-stone-400 text-xl leading-relaxed mb-6">
+                    Abbiamo scelto la lentezza di Palazzuolo per creare uno spazio sicuro. Qui il tempo si ferma, i pregiudizi restano fuori dalla porta e il bancone è il centro del mondo.
+                </p>
+                <div class="flex items-center gap-4 text-amber-500 font-bold">
+                    <span class="h-[2px] w-12 bg-amber-500"></span>
+                    <span>COMMUNITY DRIVEN PUB</span>
+                </div>
+            </div>
+            <div class="glass p-4 rounded-[40px] transform md:rotate-3">
+                <div class="bg-stone-800 rounded-[30px] h-[500px] flex items-center justify-center text-stone-500 uppercase tracking-widest border border-white/5">
+                    [Immagine Vostra o del Pub]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Cards -->
+    <section id="menu" class="py-32 bg-[#0d0d0f]">
+        <div class="max-w-6xl mx-auto px-6 text-center mb-20">
+            <h2 class="text-5xl font-black uppercase mb-4 italic">Drink & Bite</h2>
+            <p class="text-stone-500 uppercase tracking-widest text-sm">Qualità locale, spirito universale</p>
+        </div>
         
-        <div class="relative z-20 max-w-3xl">
-            <span class="uppercase tracking-[0.3em] text-amber-400 font-bold mb-4 block">Palazzuolo sul Senio</span>
-            <h1 class="text-5xl md:text-7xl mb-6">Birra, Amore e Libertà.</h1>
-            <p class="text-xl text-stone-300 mb-8 italic">Il primo pub LGBTQ+ friendly nel cuore dell'Appennino Tosco-Romagnolo.</p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="#menu" class="border-2 border-white px-8 py-3 hover:bg-white hover:text-black transition font-bold uppercase text-sm">Vedi il Menu</a>
-                <a href="#storia" class="bg-white text-black px-8 py-3 hover:bg-amber-400 transition font-bold uppercase text-sm">La Nostra Storia</a>
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+            <div class="glass p-10 rounded-3xl">
+                <i class="fa-solid fa-beer-mug-empty text-4xl text-amber-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Birre Artigianali</h3>
+                <p class="text-stone-400 mb-6 text-sm">Selezioniamo solo piccoli produttori locali per garantirti il sapore vero dell'Appennino.</p>
+                <span class="text-xs font-black tracking-widest text-amber-500">DALLA SPINA AL CUORE</span>
             </div>
-        </div>
-    </header>
-
-    <!-- La Nostra Storia -->
-    <section id="storia" class="py-20 px-6 max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <div>
-            <h2 class="text-4xl mb-6 italic">Un sogno di coppia, <br>una casa per tutti.</h2>
-            <p class="text-stone-400 mb-4 leading-relaxed">
-                Siamo Marco e Luca. Abbiamo lasciato la città per riportare vita e colori tra queste montagne. <strong>QueerOak</strong> non è solo un pub: è il nostro salotto dove ogni persona, di ogni genere e orientamento, è la benvenuta.
-            </p>
-            <p class="text-stone-400 leading-relaxed">
-                Qui troverai birre artigianali locali, taglieri a km zero e un'atmosfera dove puoi essere chiunque tu voglia. Senza giudizi, solo sorrisi.
-            </p>
-            <div class="mt-8 flex gap-4 text-3xl text-amber-500">
-                <i class="fa-solid fa-heart"></i>
-                <i class="fa-solid fa-rainbow"></i>
-                <i class="fa-solid fa-beer-mug-empty"></i>
+            <div class="glass p-10 rounded-3xl border-t-4 border-t-pink-500">
+                <i class="fa-solid fa-utensils text-4xl text-pink-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Munchies Queer</h3>
+                <p class="text-stone-400 mb-6 text-sm">Taglieri misti, crostoni caldi e opzioni vegane. Perché mangiare bene è un diritto di tutti.</p>
+                <span class="text-xs font-black tracking-widest text-pink-500">KM ZERO, ZERO STRESS</span>
             </div>
-        </div>
-        <div class="bg-stone-800 h-96 rounded-2xl flex items-center justify-center border border-stone-700">
-            <span class="text-stone-500">[Inserisci qui una foto di voi due dietro al bancone]</span>
-        </div>
-    </section>
-
-    <!-- Menu Teaser -->
-    <section id="menu" class="py-20 bg-stone-800">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl mb-4">I Nostri Cavalli di Battaglia</h2>
-                <div class="h-1 w-20 bg-amber-500 mx-auto"></div>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Food Item -->
-                <div class="bg-stone-900 p-8 border-b-4 border-amber-500">
-                    <h3 class="text-xl font-bold mb-2">Tagliere "Pride"</h3>
-                    <p class="text-stone-400 text-sm mb-4">Selezione di formaggi di Palazzuolo e salumi toscani con confetture arcobaleno.</p>
-                    <span class="text-amber-500 font-bold">€15.00</span>
-                </div>
-                <!-- Drink Item -->
-                <div class="bg-stone-900 p-8 border-b-4 border-purple-500">
-                    <h3 class="text-xl font-bold mb-2">Birra dell'Alpe</h3>
-                    <p class="text-stone-400 text-sm mb-4">Bionda artigianale cruda prodotta a pochi km dal pub. Fresca e ribelle.</p>
-                    <span class="text-amber-500 font-bold">€6.00</span>
-                </div>
-                <!-- Food Item -->
-                <div class="bg-stone-900 p-8 border-b-4 border-blue-500">
-                    <h3 class="text-xl font-bold mb-2">Burger QueerOak</h3>
-                    <p class="text-stone-400 text-sm mb-4">Manzo locale, cipolla caramellata, pecorino e salsa segreta della casa.</p>
-                    <span class="text-amber-500 font-bold">€12.00</span>
-                </div>
+            <div class="glass p-10 rounded-3xl">
+                <i class="fa-solid fa-rainbow text-4xl text-blue-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Cocktails & Love</h3>
+                <p class="text-stone-400 mb-6 text-sm">Mixology classica e creazioni stagionali ispirate ai boschi che ci circondano.</p>
+                <span class="text-xs font-black tracking-widest text-blue-500">SPIRITO LIBERO</span>
             </div>
         </div>
     </section>
 
-    <!-- Eventi/Community -->
-    <section id="eventi" class="py-20 px-6 max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl mb-8 italic text-amber-500 underline decoration-stone-500 underline-offset-8">Non Solo Birra</h2>
-        <div class="grid md:grid-cols-2 gap-8 text-left">
-            <div class="border border-stone-700 p-6 rounded-lg hover:bg-stone-800 transition">
-                <h4 class="font-bold text-amber-500 uppercase tracking-tighter mb-2">Giovedì Boardgames</h4>
-                <p class="text-stone-400">Giochi da tavolo, risate e nuovi incontri. Porta i tuoi amici o trovali qui!</p>
-            </div>
-            <div class="border border-stone-700 p-6 rounded-lg hover:bg-stone-800 transition">
-                <h4 class="font-bold text-amber-500 uppercase tracking-tighter mb-2">Talk & Queer</h4>
-                <p class="text-stone-400">Incontri mensili su diritti, letteratura e storie della comunità LGBTQ+.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer / Contatti -->
-    <footer id="contatti" class="bg-stone-950 pt-20 pb-10 px-6 border-t border-stone-800">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 mb-16">
+    <!-- Footer Moderno -->
+    <footer id="contact" class="py-20 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
             <div>
-                <h3 class="text-2xl font-bold mb-6 italic">Passa a trovarci</h3>
-                <p class="text-stone-400">
-                    Via dell'Amore 1<br>
-                    50035 Palazzuolo sul Senio (FI)<br>
-                    Italia
+                <h2 class="text-4xl font-black mb-6 uppercase">QueerOak</h2>
+                <p class="text-stone-500 max-w-xs italic">
+                    Un posto per chi ama, per chi sogna e per chi ha sete. 
+                    Ti aspettiamo a Palazzuolo sul Senio.
                 </p>
             </div>
-            <div>
-                <h3 class="text-2xl font-bold mb-6 italic">Orari</h3>
-                <p class="text-stone-400">
-                    Mer - Gio: 18:00 - 00:00<br>
-                    Ven - Sab: 18:00 - 02:00<br>
-                    Domenica: 12:00 - 22:00
-                </p>
+            <div class="space-y-4">
+                <h4 class="font-bold text-amber-500 uppercase tracking-widest">Visit Us</h4>
+                <p class="text-stone-400">Piazza G. Garibaldi, Palazzuolo sul Senio (FI)</p>
+                <p class="text-stone-400">Aperto dal Mercoledì alla Domenica</p>
             </div>
-            <div>
-                <h3 class="text-2xl font-bold mb-6 italic">Seguici</h3>
-                <div class="flex gap-4 text-2xl">
-                    <a href="#" class="hover:text-amber-500"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="hover:text-amber-500"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" class="hover:text-amber-500"><i class="fa-brands fa-tiktok"></i></a>
+            <div class="space-y-6 text-right w-full md:w-auto">
+                <div class="flex gap-6 text-2xl justify-end">
+                    <a href="#" class="hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
                 </div>
+                <p class="text-[10px] text-stone-600 tracking-tighter font-bold uppercase">Built with Pride & CSS for Marco e Luca</p>
             </div>
-        </div>
-        <div class="text-center text-stone-600 text-sm border-t border-stone-900 pt-8">
-            &copy; 2023 QueerOak Pub. Gestito con orgoglio da Marco & Luca. <br>
-            <span class="text-xs uppercase tracking-widest mt-2 block">Love is Love at high altitude.</span>
         </div>
     </footer>
 
