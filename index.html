@@ -1,230 +1,421 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUEER OAK | Palazzuolo sul Senio</title>
-    <script src="https://tailwindcss.com"></script>
-    <link href="https://cloudflare.com" rel="stylesheet">
-    <style>
-        @import url('https://googleapis.com');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arcade Portal - Nicola Meluzzi</title>
+  <style>
+    /* =========================================
+       CSS: STILI GLOBALI E SFONDO ANIMATO
+       ========================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    
+    body {
+      height: 100vh; width: 100vw; overflow: hidden; color: #fff;
+      display: flex; justify-content: center; align-items: center;
+      /* Sfondo sempre in mutazione */
+      background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #0f3460, #16213e);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        :root {
-            --neon-pink: #ff00ff;
-            --neon-blue: #00f2ff;
-            --amber: #f59e0b;
-            --bg-dark: #0a0a0c;
-        }
+    /* Gestione delle Schermate (SPA) */
+    .screen { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; flex-direction: column; animation: fadeIn 0.8s; }
+    .screen.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-dark);
-            color: #fff;
-            overflow-x: hidden;
-        }
+    /* =========================================
+       CSS: SCHERMATE LOGIN E REGISTRAZIONE
+       ========================================= */
+    .glass-box {
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5); width: 450px; text-align: center;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .glass-box::-webkit-scrollbar { width: 5px; } 
+    .glass-box::-webkit-scrollbar-thumb { background: #00d4ff; border-radius: 5px; }
 
-        h1, h2, .font-syne { font-family: 'Syne', sans-serif; }
+    h1 { font-size: 2.2rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 30px; text-shadow: 0 0 15px #00d4ff; color: #00d4ff; }
 
-        /* Sfondo Animato con Gradienti */
-        .bg-glow {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a0c 100%);
-            z-index: -1;
-        }
+    .view-section { display: none; }
+    .view-section.active { display: block; animation: fadeIn 0.5s; }
 
-        .glow-orb {
-            position: absolute;
-            width: 400px; height: 400px;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-            filter: blur(120px);
-            opacity: 0.15;
-            border-radius: 50%;
-            animation: float 20s infinite alternate;
-        }
+    .big-btn {
+      display: block; width: 100%; padding: 20px; margin-bottom: 20px; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; color: #fff;
+      background: rgba(0, 212, 255, 0.1); border: 2px solid #00d4ff; border-radius: 15px; cursor: pointer; transition: 0.4s; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+    }
+    .big-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 20px #00d4ff, 0 0 40px #00d4ff; transform: translateY(-3px); }
+    .big-btn.reg-btn { border-color: #00ff7f; background: rgba(0, 255, 127, 0.1); box-shadow: 0 0 10px rgba(0, 255, 127, 0.2); }
+    .big-btn.reg-btn:hover { background: #00ff7f; color: #000; box-shadow: 0 0 20px #00ff7f, 0 0 40px #00ff7f; }
 
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
+    .user-box { position: relative; margin-bottom: 25px; text-align: left; }
+    .user-box input, .user-box select { width: 100%; padding: 10px 0; font-size: 16px; color: #fff; border: none; border-bottom: 2px solid rgba(255,255,255,0.5); outline: none; background: transparent; transition: 0.3s; }
+    .user-box select { color: rgba(255,255,255,0.7); }
+    .user-box option { background: #302b63; color: #fff; }
+    .user-box label { position: absolute; top: 10px; left: 0; font-size: 16px; color: rgba(255,255,255,0.7); pointer-events: none; transition: 0.5s; }
+    .user-box input:focus ~ label, .user-box input:valid ~ label, .user-box select:valid ~ label { top: -20px; font-size: 12px; color: #00ff7f; font-weight: bold; }
+    .user-box input:focus, .user-box select:focus { border-bottom: 2px solid #00ff7f; }
+    .row { display: flex; gap: 15px; } .row .user-box { flex: 1; }
 
-        /* Effetto Vetro (Glassmorphism) */
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+    button.submit-btn { width: 100%; padding: 12px; font-size: 16px; background: transparent; border: 1px solid #00d4ff; color: #00d4ff; cursor: pointer; border-radius: 50px; font-weight: bold; transition: 0.3s; letter-spacing: 2px; margin-top: 10px; }
+    button.submit-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 15px #00d4ff; }
+    .back-link { display: block; margin-top: 20px; color: #aaa; text-decoration: underline; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+    .back-link:hover { color: #fff; }
+    #auth-message { margin-top: 20px; font-weight: bold; font-size: 1.1rem; min-height: 25px; }
 
-        .glass:hover {
-            background: rgba(255, 255, 255, 0.07);
-            transform: translateY(-10px);
-            border-color: var(--neon-blue);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        /* Testo Arcobaleno Neon */
-        .text-rainbow {
-            background: linear-gradient(to right, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
-        /* Bottone Custom */
-        .btn-neon {
-            position: relative;
-            padding: 1rem 2.5rem;
-            text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 2px;
-            transition: 0.5s;
-            overflow: hidden;
-            border: 2px solid var(--amber);
-            color: var(--amber);
-        }
-
-        .btn-neon:hover {
-            background: var(--amber);
-            color: #000;
-            box-shadow: 0 0 30px var(--amber);
-        }
-
-        /* Navbar Blur */
-        nav {
-            background: rgba(10, 10, 12, 0.8);
-            backdrop-filter: saturate(180%) blur(20px);
-        }
-
-        /* Sezione Curve */
-        .curvy-divider {
-            height: 100px;
-            width: 100%;
-            background: var(--bg-dark);
-            clip-path: polygon(0 0, 100% 0, 100% 70%, 0% 100%);
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--amber); }
-
-    </style>
+    /* =========================================
+       CSS: STILI DEI GIOCHI
+       ========================================= */
+    .game-container { position: relative; border: 2px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5); background: #000; border-radius: 5px; }
+    #tetris-canvas { display: block; }
+    #snake-canvas { display: block; border: 2px solid #00ff7f; box-shadow: 0 0 20px #00ff7f; border-radius: 5px; }
+    .score-board { margin-bottom: 15px; font-size: 24px; font-weight: bold; text-shadow: 2px 2px #000; text-transform: uppercase; }
+    .tetris-score { color: #00d4ff; text-shadow: 0 0 10px #00d4ff; }
+    .snake-score { color: #00ff7f; text-shadow: 0 0 10px #00ff7f; font-size: 32px; }
+    .controls-hint { font-size: 14px; margin-top: 15px; color: #aaa; text-align: center; }
+    
+    .logout-btn { position: absolute; top: 20px; right: 20px; padding: 10px 20px; background: rgba(255,0,127,0.2); border: 2px solid #ff007f; color: #ff007f; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.3s; text-transform: uppercase; }
+    .logout-btn:hover { background: #ff007f; color: #fff; box-shadow: 0 0 15px #ff007f; }
+  </style>
 </head>
 <body>
 
-    <div class="bg-glow">
-        <div class="glow-orb" style="top: 10%; left: -10%;"></div>
-        <div class="glow-orb" style="bottom: 10%; right: -10%; animation-delay: -5s;"></div>
+  <div id="screen-auth" class="screen active">
+    <div class="glass-box">
+      <h1>ARCADE PORTAL</h1>
+
+      <div id="viewInit" class="view-section active">
+        <button class="big-btn" onclick="showAuthView('viewLogin')">ACCEDI</button>
+        <button class="big-btn reg-btn" onclick="showAuthView('viewReg')">REGISTRATI</button>
+      </div>
+
+      <div id="viewLogin" class="view-section">
+        <form id="loginForm">
+          <div class="user-box"><input type="text" id="logUser" required><label>Username</label></div>
+          <div class="user-box"><input type="password" id="logPass" required><label>Password</label></div>
+          <button type="submit" class="submit-btn" id="btnLogin">ENTRA</button>
+        </form>
+        <div class="back-link" onclick="showAuthView('viewInit')">← Torna Indietro</div>
+      </div>
+
+      <div id="viewReg" class="view-section">
+        <form id="registerForm">
+          <div class="row">
+            <div class="user-box"><input type="text" id="regNome" required><label>Nome</label></div>
+            <div class="user-box"><input type="text" id="regCognome" required><label>Cognome</label></div>
+          </div>
+          <div class="user-box">
+            <select id="regSesso" required>
+              <option value="" disabled selected></option><option value="M">Uomo</option><option value="F">Donna</option><option value="A">Altro</option>
+            </select>
+            <label>Sesso</label>
+          </div>
+          <div class="user-box"><input type="text" id="regContatto" required><label>Email o Numero di Telefono</label></div>
+          <div class="user-box"><input type="text" id="regUsername" required><label>Username Scelto</label></div>
+          <div class="row">
+            <div class="user-box"><input type="password" id="regPass" required><label>Password</label></div>
+            <div class="user-box"><input type="password" id="regPassConf" required><label>Conferma Password</label></div>
+          </div>
+          <button type="submit" class="submit-btn" style="border-color:#00ff7f; color:#00ff7f;">CREA ACCOUNT</button>
+        </form>
+        <div class="back-link" onclick="showAuthView('viewInit')">← Torna Indietro</div>
+      </div>
+
+      <div id="auth-message"></div>
     </div>
+  </div>
 
-    <!-- Nav -->
-    <nav class="fixed w-full z-[100] px-8 py-4 flex justify-between items-center border-b border-white/10">
-        <div class="text-3xl font-black tracking-tighter uppercase">
-            Queer<span class="text-amber-500 italic">Oak</span>
-        </div>
-        <div class="hidden md:flex space-x-10 text-[10px] uppercase tracking-[0.3em] font-bold">
-            <a href="#about" class="hover:text-amber-500 transition">Story</a>
-            <a href="#menu" class="hover:text-amber-500 transition">Craft Beer</a>
-            <a href="#vibes" class="hover:text-amber-500 transition">Vibes</a>
-            <a href="#contact" class="hover:text-amber-500 transition">Find Us</a>
-        </div>
-    </nav>
+  <div id="screen-tetris" class="screen">
+    <button class="logout-btn" onclick="logout()">Esci / Logout</button>
+    <div class="score-board tetris-score" id="tetris-score">Punti: 0</div>
+    <div class="game-container">
+      <canvas id="tetris-canvas" width="240" height="400"></canvas>
+    </div>
+    <div class="controls-hint">Frecce LATERALE: Muovi | SU: Ruota | GIÙ: Scendi veloce</div>
+  </div>
 
-    <!-- Hero -->
-    <section class="relative min-h-screen flex flex-col justify-center items-center text-center p-6 pt-24">
-        <div class="space-y-4">
-            <h2 class="text-amber-500 font-bold tracking-[0.5em] uppercase text-sm">Appennino Tosco-Romagnolo</h2>
-            <h1 class="text-6xl md:text-9xl font-extrabold leading-none uppercase">
-                Feel <span class="text-rainbow">Free</span><br>Drink <span class="italic text-white">Proud</span>
-            </h1>
-            <p class="max-w-xl mx-auto text-stone-400 py-8 text-lg font-light">
-                Un pub gestito da una coppia che crede nell'amore e nella buona birra. Ti aspettiamo nel borgo di Palazzuolo sul Senio.
-            </p>
-            <div class="flex flex-wrap justify-center gap-6 pt-4">
-                <a href="#menu" class="btn-neon">Il Menu</a>
-                <a href="https://wa.me" class="px-10 py-4 font-bold border-b-2 border-white hover:border-amber-500 transition">Vieni a trovarci</a>
-            </div>
-        </div>
-    </section>
+  <div id="screen-snake" class="screen">
+    <button class="logout-btn" onclick="logout()">Esci / Logout</button>
+    <div class="score-board snake-score" id="snake-score">PUNTEGGIO: 0</div>
+    <canvas id="snake-canvas" width="400" height="400"></canvas>
+    <div class="controls-hint">Usa le FRECCE DIREZIONALI per muovere il serpente</div>
+  </div>
 
-    <!-- Storia Asimmetrica -->
-    <section id="about" class="py-32 px-6 overflow-hidden">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
-            <div class="relative">
-                <div class="absolute -top-10 -left-10 w-32 h-32 border-l-4 border-t-4 border-amber-500"></div>
-                <h2 class="text-5xl font-black mb-8 leading-tight">Marco & Luca:<br>Dalla Città alla Montagna.</h2>
-                <p class="text-stone-400 text-xl leading-relaxed mb-6">
-                    Abbiamo scelto la lentezza di Palazzuolo per creare uno spazio sicuro. Qui il tempo si ferma, i pregiudizi restano fuori dalla porta e il bancone è il centro del mondo.
-                </p>
-                <div class="flex items-center gap-4 text-amber-500 font-bold">
-                    <span class="h-[2px] w-12 bg-amber-500"></span>
-                    <span>COMMUNITY DRIVEN PUB</span>
-                </div>
-            </div>
-            <div class="glass p-4 rounded-[40px] transform md:rotate-3">
-                <div class="bg-stone-800 rounded-[30px] h-[500px] flex items-center justify-center text-stone-500 uppercase tracking-widest border border-white/5">
-                    [Immagine Vostra o del Pub]
-                </div>
-            </div>
-        </div>
-    </section>
+  <script>
+    /* --- GESTIONE SCHERMATE E DATABASE LOCALE --- */
+    let currentActiveGame = null;
+    let tetrisReqAnimFrame, snakeReqAnimFrame;
 
-    <!-- Menu Cards -->
-    <section id="menu" class="py-32 bg-[#0d0d0f]">
-        <div class="max-w-6xl mx-auto px-6 text-center mb-20">
-            <h2 class="text-5xl font-black uppercase mb-4 italic">Drink & Bite</h2>
-            <p class="text-stone-500 uppercase tracking-widest text-sm">Qualità locale, spirito universale</p>
-        </div>
-        
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
-            <div class="glass p-10 rounded-3xl">
-                <i class="fa-solid fa-beer-mug-empty text-4xl text-amber-500 mb-6"></i>
-                <h3 class="text-2xl font-bold mb-4">Birre Artigianali</h3>
-                <p class="text-stone-400 mb-6 text-sm">Selezioniamo solo piccoli produttori locali per garantirti il sapore vero dell'Appennino.</p>
-                <span class="text-xs font-black tracking-widest text-amber-500">DALLA SPINA AL CUORE</span>
-            </div>
-            <div class="glass p-10 rounded-3xl border-t-4 border-t-pink-500">
-                <i class="fa-solid fa-utensils text-4xl text-pink-500 mb-6"></i>
-                <h3 class="text-2xl font-bold mb-4">Munchies Queer</h3>
-                <p class="text-stone-400 mb-6 text-sm">Taglieri misti, crostoni caldi e opzioni vegane. Perché mangiare bene è un diritto di tutti.</p>
-                <span class="text-xs font-black tracking-widest text-pink-500">KM ZERO, ZERO STRESS</span>
-            </div>
-            <div class="glass p-10 rounded-3xl">
-                <i class="fa-solid fa-rainbow text-4xl text-blue-500 mb-6"></i>
-                <h3 class="text-2xl font-bold mb-4">Cocktails & Love</h3>
-                <p class="text-stone-400 mb-6 text-sm">Mixology classica e creazioni stagionali ispirate ai boschi che ci circondano.</p>
-                <span class="text-xs font-black tracking-widest text-blue-500">SPIRITO LIBERO</span>
-            </div>
-        </div>
-    </section>
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
 
-    <!-- Footer Moderno -->
-    <footer id="contact" class="py-20 px-6 border-t border-white/5">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
-            <div>
-                <h2 class="text-4xl font-black mb-6 uppercase">QueerOak</h2>
-                <p class="text-stone-500 max-w-xs italic">
-                    Un posto per chi ama, per chi sogna e per chi ha sete. 
-                    Ti aspettiamo a Palazzuolo sul Senio.
-                </p>
-            </div>
-            <div class="space-y-4">
-                <h4 class="font-bold text-amber-500 uppercase tracking-widest">Visit Us</h4>
-                <p class="text-stone-400">Piazza G. Garibaldi, Palazzuolo sul Senio (FI)</p>
-                <p class="text-stone-400">Aperto dal Mercoledì alla Domenica</p>
-            </div>
-            <div class="space-y-6 text-right w-full md:w-auto">
-                <div class="flex gap-6 text-2xl justify-end">
-                    <a href="#" class="hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" class="hover:text-green-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
-                </div>
-                <p class="text-[10px] text-stone-600 tracking-tighter font-bold uppercase">Built with Pride & CSS for Marco e Luca</p>
-            </div>
-        </div>
-    </footer>
+    function showAuthView(viewId) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      document.getElementById('auth-message').innerText = '';
+    }
 
+    function printMsg(text, color) {
+      const m = document.getElementById('auth-message');
+      m.style.color = color;
+      m.innerText = text;
+    }
+
+    function logout() {
+      // Ferma i loop dei giochi
+      if (tetrisReqAnimFrame) cancelAnimationFrame(tetrisReqAnimFrame);
+      if (snakeReqAnimFrame) cancelAnimationFrame(snakeReqAnimFrame);
+      currentActiveGame = null;
+      
+      showScreen('screen-auth');
+      showAuthView('viewInit');
+      document.getElementById('loginForm').reset();
+    }
+
+    // --- LOGICA REGISTRAZIONE ---
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pass = document.getElementById('regPass').value;
+      const confPass = document.getElementById('regPassConf').value;
+      const username = document.getElementById('regUsername').value;
+
+      if (pass !== confPass) return printMsg('Le password non coincidono!', '#ff4d4d');
+
+      // Prendi il "Database" dal browser (o creane uno vuoto)
+      let usersDB = JSON.parse(localStorage.getItem('arcadeUsers')) || [];
+
+      if (usersDB.find(u => u.username === username) || username === 'nicola.meluzzi') {
+        return printMsg('Username non disponibile.', '#ff4d4d');
+      }
+
+      // Salva l'utente
+      usersDB.push({ username, password: pass });
+      localStorage.setItem('arcadeUsers', JSON.stringify(usersDB));
+
+      printMsg('Registrazione completata! Puoi fare il Login.', '#00ff7f');
+      setTimeout(() => { showAuthView('viewLogin'); document.getElementById('registerForm').reset(); }, 2000);
+    });
+
+    // --- LOGICA LOGIN E AVVIO GIOCO ---
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('logUser').value;
+      const pass = document.getElementById('logPass').value;
+
+      // 1. Caso Hardcoded (Nicola)
+      if (user === 'nicola.meluzzi' && pass === '1223') {
+        printMsg('Accesso Tetris...', '#00d4ff');
+        setTimeout(() => {
+          showScreen('screen-tetris');
+          currentActiveGame = 'tetris';
+          TetrisGame.init();
+        }, 1000);
+        return;
+      }
+
+      // 2. Utenti Standard
+      let usersDB = JSON.parse(localStorage.getItem('arcadeUsers')) || [];
+      const found = usersDB.find(u => u.username === user && u.password === pass);
+      
+      if (found) {
+        printMsg('Accesso Snake...', '#00ff7f');
+        setTimeout(() => {
+          showScreen('screen-snake');
+          currentActiveGame = 'snake';
+          SnakeGame.init();
+        }, 1000);
+      } else {
+        printMsg('Credenziali Errate.', '#ff4d4d');
+      }
+    });
+
+    /* =========================================
+       MOTORE TETRIS (Incapsulato)
+       ========================================= */
+    const TetrisGame = (function() {
+      const canvas = document.getElementById('tetris-canvas');
+      const context = canvas.getContext('2d');
+      context.scale(20, 20);
+
+      const colors = [null, '#FF0D72', '#0DC2FF', '#0DFF72', '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'];
+      let arena, player, dropCounter, dropInterval, lastTime;
+
+      function createMatrix(w, h) { const m = []; while(h--) m.push(new Array(w).fill(0)); return m; }
+      function createPiece(type) {
+        if (type === 'I') return [[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]];
+        if (type === 'L') return [[0,2,0],[0,2,0],[0,2,2]];
+        if (type === 'J') return [[0,3,0],[0,3,0],[3,3,0]];
+        if (type === 'O') return [[4,4],[4,4]];
+        if (type === 'Z') return [[5,5,0],[0,5,5],[0,0,0]];
+        if (type === 'S') return [[0,6,6],[6,6,0],[0,0,0]];
+        if (type === 'T') return [[0,7,0],[7,7,7],[0,0,0]];
+      }
+
+      function drawMatrix(matrix, offset) {
+        matrix.forEach((row, y) => {
+          row.forEach((value, x) => {
+            if (value !== 0) {
+              context.fillStyle = colors[value];
+              context.fillRect(x + offset.x, y + offset.y, 1, 1);
+              context.lineWidth = 0.05; context.strokeStyle = 'white'; context.strokeRect(x + offset.x, y + offset.y, 1, 1);
+            }
+          });
+        });
+      }
+
+      function collide(a, p) {
+        const m = p.matrix, o = p.pos;
+        for (let y = 0; y < m.length; ++y) {
+          for (let x = 0; x < m[y].length; ++x) {
+            if (m[y][x] !== 0 && (a[y + o.y] && a[y + o.y][x + o.x]) !== 0) return true;
+          }
+        } return false;
+      }
+
+      function merge(a, p) { p.matrix.forEach((row, y) => { row.forEach((val, x) => { if (val !== 0) a[y + p.pos.y][x + p.pos.x] = val; }); }); }
+      
+      function rotate(matrix, dir) {
+        for (let y = 0; y < matrix.length; ++y) { for (let x = 0; x < y; ++x) { [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]]; } }
+        if (dir > 0) matrix.forEach(row => row.reverse()); else matrix.reverse();
+      }
+
+      function playerDrop() {
+        player.pos.y++;
+        if (collide(arena, player)) {
+          player.pos.y--; merge(arena, player); playerReset(); arenaSweep(); updateScore();
+        } dropCounter = 0;
+      }
+
+      function playerMove(dir) { player.pos.x += dir; if (collide(arena, player)) player.pos.x -= dir; }
+      
+      function playerRotate(dir) {
+        const pos = player.pos.x; let offset = 1; rotate(player.matrix, dir);
+        while (collide(arena, player)) {
+          player.pos.x += offset; offset = -(offset + (offset > 0 ? 1 : -1));
+          if (offset > player.matrix[0].length) { rotate(player.matrix, -dir); player.pos.x = pos; return; }
+        }
+      }
+
+      function playerReset() {
+        const pieces = 'TJLOSZI'; player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+        player.pos.y = 0; player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+        if (collide(arena, player)) { arena.forEach(row => row.fill(0)); player.score = 0; updateScore(); }
+      }
+
+      function arenaSweep() {
+        let rowCount = 1;
+        outer: for (let y = arena.length - 1; y > 0; --y) {
+          for (let x = 0; x < arena[y].length; ++x) { if (arena[y][x] === 0) continue outer; }
+          const row = arena.splice(y, 1)[0].fill(0); arena.unshift(row); ++y; player.score += rowCount * 10; rowCount *= 2;
+        }
+      }
+
+      function updateScore() { document.getElementById('tetris-score').innerText = "Punti: " + player.score; }
+
+      function update(time = 0) {
+        if(currentActiveGame !== 'tetris') return; // Stop loop se esci
+        const deltaTime = time - lastTime; lastTime = time; dropCounter += deltaTime;
+        if (dropCounter > dropInterval) playerDrop();
+        context.fillStyle = '#000'; context.fillRect(0, 0, canvas.width, canvas.height);
+        drawMatrix(arena, {x: 0, y: 0}); drawMatrix(player.matrix, player.pos);
+        tetrisReqAnimFrame = requestAnimationFrame(update);
+      }
+
+      return {
+        init: () => {
+          arena = createMatrix(12, 20);
+          player = { pos: {x: 0, y: 0}, matrix: null, score: 0 };
+          dropCounter = 0; dropInterval = 1000; lastTime = 0;
+          playerReset(); updateScore(); update();
+        },
+        move: playerMove, drop: playerDrop, rot: playerRotate
+      };
+    })();
+
+    /* =========================================
+       MOTORE SNAKE (Incapsulato)
+       ========================================= */
+    const SnakeGame = (function() {
+      const canvas = document.getElementById('snake-canvas');
+      const ctx = canvas.getContext('2d');
+      const grid = 20;
+      let count, score, snake, apple;
+
+      function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+
+      function reset() {
+        snake = { x: 160, y: 160, dx: grid, dy: 0, cells: [], maxCells: 4 };
+        apple = { x: 320, y: 320 };
+        score = 0; count = 0;
+        document.getElementById('snake-score').innerText = 'PUNTEGGIO: 0';
+      }
+
+      function loop() {
+        if(currentActiveGame !== 'snake') return; // Stop loop se esci
+        snakeReqAnimFrame = requestAnimationFrame(loop);
+        if (++count < 4) return; // Regola velocità
+        count = 0;
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        snake.x += snake.dx; snake.y += snake.dy;
+        if (snake.x < 0) snake.x = canvas.width - grid; else if (snake.x >= canvas.width) snake.x = 0;
+        if (snake.y < 0) snake.y = canvas.height - grid; else if (snake.y >= canvas.height) snake.y = 0;
+
+        snake.cells.unshift({x: snake.x, y: snake.y});
+        if (snake.cells.length > snake.maxCells) snake.cells.pop();
+
+        ctx.fillStyle = '#ff007f'; ctx.shadowBlur = 10; ctx.shadowColor = '#ff007f';
+        ctx.fillRect(apple.x, apple.y, grid-1, grid-1);
+
+        ctx.fillStyle = '#00ff7f'; ctx.shadowColor = '#00ff7f';
+        snake.cells.forEach(function(cell, index) {
+          ctx.fillRect(cell.x, cell.y, grid-1, grid-1);
+          if (cell.x === apple.x && cell.y === apple.y) {
+            snake.maxCells++; score += 10;
+            document.getElementById('snake-score').innerText = 'PUNTEGGIO: ' + score;
+            apple.x = getRandomInt(0, 20) * grid; apple.y = getRandomInt(0, 20) * grid;
+          }
+          for (let i = index + 1; i < snake.cells.length; i++) {
+            if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) reset();
+          }
+        });
+        ctx.shadowBlur = 0;
+      }
+
+      return {
+        init: () => { reset(); loop(); },
+        dir: (dx, dy) => { snake.dx = dx; snake.dy = dy; },
+        getDx: () => snake.dx, getDy: () => snake.dy
+      }
+    })();
+
+    /* --- GESTIONE INPUT TASTIERA GLOBALE --- */
+    document.addEventListener('keydown', function(e) {
+      if (currentActiveGame === 'tetris') {
+        if (e.keyCode === 37) TetrisGame.move(-1);
+        else if (e.keyCode === 39) TetrisGame.move(1);
+        else if (e.keyCode === 40) TetrisGame.drop();
+        else if (e.keyCode === 38) TetrisGame.rot(1);
+      } 
+      else if (currentActiveGame === 'snake') {
+        const grid = 20;
+        if (e.which === 37 && SnakeGame.getDx() === 0) SnakeGame.dir(-grid, 0);
+        else if (e.which === 38 && SnakeGame.getDy() === 0) SnakeGame.dir(0, -grid);
+        else if (e.which === 39 && SnakeGame.getDx() === 0) SnakeGame.dir(grid, 0);
+        else if (e.which === 40 && SnakeGame.getDy() === 0) SnakeGame.dir(0, grid);
+      }
+    });
+  </script>
 </body>
 </html>
+
